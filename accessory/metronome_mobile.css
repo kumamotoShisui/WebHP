@@ -1,0 +1,626 @@
+:root {
+    --bg-dark: #0f172a;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --primary: #38bdf8;
+    --highlight: #7dd3fc;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --danger: #ef4444;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    /* Prevent text selection on mobile app */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    height: 100vh;
+    overflow: hidden;
+    /* App-like fixed viewport */
+}
+
+.mobile-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+    gap: 16px;
+}
+
+/* Visualizer */
+.visualizer-section {
+    flex: 0 0 200px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    position: relative;
+    border: 1px solid var(--card-border);
+    overflow: hidden;
+}
+
+#conductor-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
+.beat-info {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+}
+
+#beat-counter {
+    font-size: 3rem;
+    font-weight: 800;
+    opacity: 0.3;
+    transition: opacity 0.1s;
+}
+
+#beat-counter.active {
+    opacity: 1;
+}
+
+#beat-visual {
+    width: 12px;
+    height: 12px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    margin: 5px auto;
+}
+
+#beat-visual.active {
+    background: var(--primary);
+    transform: scale(1.5);
+}
+
+#beat-visual.downbeat {
+    background: #fff;
+    transform: scale(2.0);
+}
+
+
+/* Toggle Switch */
+.mode-toggles {
+    display: flex;
+    background: var(--card-bg);
+    padding: 4px;
+    border-radius: 12px;
+}
+
+.toggle-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.toggle-btn.active {
+    background: var(--card-border);
+    color: var(--text-main);
+}
+
+/* Controls */
+.controls-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 80px;
+    /* Space for FAB */
+}
+
+.control-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bpm-display-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bpm-value {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#bpm-display {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+.adjust-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.adjust-btn:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Sliders */
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    background: var(--primary);
+    margin-top: -14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    background: var(--card-border);
+    border-radius: 2px;
+}
+
+/* Settings Row */
+.settings-row {
+    display: flex;
+    gap: 12px;
+}
+
+.setting-box {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-box label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+select {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 600;
+    width: 100%;
+    outline: none;
+}
+
+select option {
+    background: var(--bg-dark);
+}
+
+/* Sequence Steps */
+.sequence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.step-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.step-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px;
+}
+
+.step-idx {
+    font-weight: 800;
+    color: var(--text-muted);
+}
+
+.step-remove {
+    color: var(--danger);
+    background: none;
+    border: none;
+    padding: 4px;
+    font-weight: 600;
+}
+
+.step-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.step-row:last-child {
+    margin-bottom: 0;
+}
+
+.field {
+    flex: 1;
+}
+
+.field.full {
+    width: 100%;
+}
+
+.field label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.field input,
+.field select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.check-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.check-box input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    border: 1px dashed var(--card-border);
+}
+
+.hidden {
+    display: none;
+}
+
+/* FAB Play Button */
+.bottom-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    /* Let touches pass around button */
+}
+
+.fab-play {
+    pointer-events: auto;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: none;
+    box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.fab-play:active {
+    transform: scale(0.95);
+}
+
+.fab-play.playing {
+    background: var(--danger);
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+}
+
+.icon-play {
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 20px solid white;
+    margin-left: 4px;
+}
+
+.fab-play.playing .icon-play {
+    width: 16px;
+    height: 16px;
+    background: white;
+    border: none;
+    margin: 0;
+    border-radius: 2px;
+}
+
+.volume-row {
+    background: var(--card-bg);
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+}
+
+/* Settings Row */
+.settings-row {
+    display: flex;
+    gap: 12px;
+}
+
+.setting-box {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-box label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+select {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 600;
+    width: 100%;
+    outline: none;
+}
+
+select option {
+    background: var(--bg-dark);
+}
+
+/* Sequence Steps */
+.sequence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.step-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.step-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px;
+}
+
+.step-idx {
+    font-weight: 800;
+    color: var(--text-muted);
+}
+
+.step-remove {
+    color: var(--danger);
+    background: none;
+    border: none;
+    padding: 4px;
+    font-weight: 600;
+}
+
+.step-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.step-row:last-child {
+    margin-bottom: 0;
+}
+
+.field {
+    flex: 1;
+}
+
+.field.full {
+    width: 100%;
+}
+
+.field label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.field input,
+.field select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.check-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.check-box input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    border: 1px dashed var(--card-border);
+}
+
+.hidden {
+    display: none;
+}
+
+/* FAB Play Button */
+.bottom-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    /* Let touches pass around button */
+}
+
+.fab-play {
+    pointer-events: auto;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: none;
+    box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.fab-play:active {
+    transform: scale(0.95);
+}
+
+.fab-play.playing {
+    background: var(--danger);
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+}
+
+.icon-play {
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 20px solid white;
+    margin-left: 4px;
+}
+
+.fab-play.playing .icon-play {
+    width: 16px;
+    height: 16px;
+    background: white;
+    border: none;
+    margin: 0;
+    border-radius: 2px;
+}
+
+.volume-row {
+    background: var(--card-bg);
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--card-border);
+}
+
+.volume-row label {
+    font-size: 0.8rem;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+}
+
+/* Focus Mode for Mobile */
+.focus-active .mode-toggles,
+.focus-active .volume-row,
+.focus-active .settings-row,
+.focus-active .sequence-list,
+.focus-active #add-step-btn,
+.focus-active .seq-options,
+.focus-active #bpm-slider,
+.focus-active .adjust-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+/* Ensure BPM Number stays visible */
+.focus-active .bpm-display-row {
+    justify-content: center;
+    /* Center the number when buttons fade */
+}
+
+.focus-active .adjust-btn {
+    display: none;
+    /* Actually remove buttons from layout to center properly? opacity is simpler for transition */
+}

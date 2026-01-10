@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Noto+Serif+JP:wght@400;600;700;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        font-family: 'Noto Sans JP', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-slate-50 text-slate-900;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-bold tracking-tight;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply bg-primary-900 hover:bg-primary-800 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-primary-900/20 transform hover:-translate-y-0.5;
+    }
+
+    .btn-secondary {
+        @apply bg-secondary-500 hover:bg-secondary-400 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-secondary-500/20 transform hover:-translate-y-0.5;
+    }
+
+    .btn-outline {
+        @apply border-2 border-primary-900 text-primary-900 hover:bg-primary-50 font-medium py-3 px-8 rounded-full transition-all duration-300;
+    }
+
+    .section-padding {
+        @apply py-20 px-4 sm:px-6 lg:px-8;
+    }
+
+    .container-max {
+        @apply max-w-7xl mx-auto;
+    }
+
+    .gradient-bg {
+        background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+    }
+
+    .gradient-gold {
+        background: linear-gradient(135deg, #e1b10e 0%, #b45309 100%);
+    }
+
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-800 to-primary-600;
+    }
+
+    .text-gradient-gold {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary-500 to-secondary-700;
+    }
+
+    .card-hover {
+        @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+    }
+}

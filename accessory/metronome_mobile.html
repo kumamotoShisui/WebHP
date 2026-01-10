@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Metronome Mobile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="metronome_mobile.css">
+    <style>
+        #debug-console {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #0f0;
+            font-family: monospace;
+            font-size: 10px;
+            pointer-events: none;
+            z-index: 9999;
+            overflow-y: hidden;
+            white-space: pre-wrap;
+            padding: 4px;
+            display: block;
+            /* Visible for debugging */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="debug-console">Wait...</div>
+
+    <div class="mobile-container">
+        <!-- Visualizer Area -->
+        <div class="visualizer-section">
+            <canvas id="conductor-canvas"></canvas>
+            <div class="beat-info">
+                <div id="beat-counter">1</div>
+                <div id="beat-visual"></div>
+            </div>
+        </div>
+
+        <!-- Main Controls -->
+        <div class="controls-container">
+            <!-- Mode Switch -->
+            <div class="mode-toggles">
+                <button id="mode-simple" class="toggle-btn active">Simple</button>
+                <button id="mode-sequence" class="toggle-btn">Seq</button>
+            </div>
+
+            <!-- Simple Mode -->
+            <div id="simple-view">
+                <!-- BPM Control -->
+                <div class="control-card">
+                    <div class="bpm-display-row">
+                        <button id="bpm-minus" class="adjust-btn">-</button>
+                        <div class="bpm-value">
+                            <span id="bpm-display">120</span>
+                            <span class="label">BPM</span>
+                        </div>
+                        <button id="bpm-plus" class="adjust-btn">+</button>
+                    </div>
+                    <input type="range" id="bpm-slider" class="big-slider" min="30" max="300" value="120">
+                </div>
+
+                <!-- Settings Row -->
+                <div class="settings-row">
+                    <div class="setting-box">
+                        <label>Time Sig</label>
+                        <select id="time-signature">
+                            <option value="4/4" selected>4/4</option>
+                            <option value="3/4">3/4</option>
+                            <option value="2/4">2/4</option>
+                            <option value="1/4">1/4</option>
+                            <option value="6/8">6/8</option>
+                            <option value="5/8">5/8</option>
+                            <option value="9/8-2223">9/8 (2223)</option>
+                            <option value="9/8-2322">9/8 (2322)</option>
+                            <option value="6/8+3/4">6/8+3/4</option>
+                        </select>
+                    </div>
+                    <div class="setting-box">
+                        <label>Pre-count</label>
+                        <select id="precount-bars">
+                            <option value="0">Off</option>
+                            <option value="1">1 Bar</option>
+                            <option value="2">2 Bars</option>
+                            <option value="4">4 Bars</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sequence Mode -->
+            <div id="sequence-view" class="hidden">
+                <div id="sequence-list" class="sequence-list">
+                    <div class="empty-msg">Tap "+ Step" to add</div>
+                </div>
+                <button id="add-step-btn" class="action-btn secondary">+ Add Step</button>
+
+                <div class="seq-options">
+                    <label class="check-box">
+                        <input type="checkbox" id="sequence-loop"> Loop
+                    </label>
+                </div>
+
+                <div id="seq-status" class="seq-status" style="display:none;">
+                    Step <span id="seq-current-step">1</span> (<span id="seq-current-bar">1</span>/<span
+                        id="seq-total-bars">4</span>)
+                </div>
+            </div>
+
+            <!-- Focus and Volume -->
+            <div class="control-card" style="margin-top:16px; padding:12px; gap:8px;">
+                <label class="check-box"
+                    style="justify-content:space-between; width:100%; font-size:1rem; color:white;">
+                    Auto-Focus Mode (Hide UI)
+                    <input type="checkbox" id="focus-mode-toggle" style="width:24px; height:24px;">
+                </label>
+            </div>
+
+            <div class="volume-row">
+                <label>Vol</label>
+                <input type="range" id="volume-slider" class="volume-slider" min="0" max="300" value="200">
+            </div>
+        </div>
+
+        <!-- Floating Play Button -->
+        <div class="bottom-bar">
+            <button id="play-btn" class="fab-play">
+                <div class="icon-play"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step Template -->
+    <template id="step-template">
+        <div class="step-card">
+            <div class="step-top">
+                <span class="step-idx">#1</span>
+                <button class="step-remove">Remove</button>
+            </div>
+            <div class="step-main">
+                <div class="step-row">
+                    <select class="step-type-select">
+                        <option value="normal">Active</option>
+                        <option value="fermata">Fermata</option>
+                    </select>
+                </div>
+
+                <!-- Normal Controls -->
+                <div class="step-content type-normal">
+                    <div class="step-row">
+                        <div class="field">
+                            <label>Start BPM</label>
+                            <input type="number" class="step-bpm-start" value="120">
+                        </div>
+                        <div class="field">
+                            <label>Sig</label>
+                            <select class="step-signature">
+                                <option value="4/4">4/4</option>
+                                <option value="3/4">3/4</option>
+                                <option value="2/4">2/4</option>
+                                <option value="6/8">6/8</option>
+                                <option value="5/8">5/8</option>
+                                <option value="9/8-2223">9/8(A)</option>
+                                <option value="9/8-2322">9/8(B)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <label class="check-box ramp-chk">
+                            <input type="checkbox" class="step-ramp-toggle"> Ramp?
+                        </label>
+                        <div class="field ramp-end-field" style="display:none;">
+                            <label>End BPM</label>
+                            <input type="number" class="step-bpm-end" value="120">
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="field full">
+                            <label>Bars</label>
+                            <input type="number" class="step-bars" value="4">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fermata Controls -->
+                <div class="step-content type-fermata" style="display:none;">
+                    <div class="field full">
+                        <label>Duration (sec)</label>
+                        <input type="number" class="step-duration" value="2.0" step="0.5">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="metronome_mobile.js"></script>
+</body>
+
+</html>
