@@ -155,6 +155,22 @@ img {
 
 .logo {
     display: flex;
+    align-items: center;
+    /* Center icon and text vertically */
+}
+
+.logo-icon {
+    width: 60px;
+    /* Adjust size as needed */
+    height: 60px;
+    object-fit: contain;
+    margin-right: 15px;
+    border-radius: 50%;
+    /* Optional: make it round if desired */
+}
+
+.logo-text {
+    display: flex;
     flex-direction: column;
 }
 
