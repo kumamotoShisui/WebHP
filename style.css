@@ -322,6 +322,15 @@ img {
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
 }
 
+.hero-image {
+    max-width: 90%;
+    max-height: 50vh;
+    margin: 0 auto 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    object-fit: cover;
+}
+
 .hero-description {
     font-size: 1.2rem;
     margin-bottom: 40px;
@@ -897,6 +906,7 @@ img {
         font-size: 2rem;
     }
 }
+
 /* Instagram Card */
 .instagram-link-card {
     display: inline-flex;
