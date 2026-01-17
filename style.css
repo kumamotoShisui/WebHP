@@ -294,8 +294,7 @@ img {
 .hero {
     height: 100vh;
     min-height: 600px;
-    background-image: url('https://images.unsplash.com/photo-1543362906-ac1b482630e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-    /* Placeholder Concert Hall */
+    background-image: url('image/HeaderImages.webp');
     background-size: cover;
     background-position: center;
     position: relative;
