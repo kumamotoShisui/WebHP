@@ -990,3 +990,49 @@ img {
         justify-content: center;
     }
 }
+
+/* Mascot */
+.mascot {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 999;
+    transition: var(--transition);
+    animation: float 3s ease-in-out infinite;
+}
+
+.mascot:hover {
+    transform: scale(1.1);
+}
+
+.mascot-image {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mascot-image:hover {
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .mascot {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .mascot-image {
+        width: 80px;
+    }
+}
