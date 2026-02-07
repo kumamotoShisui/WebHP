@@ -673,6 +673,34 @@ img {
 }
 
 /* Contact Section */
+#contact {
+    background-image: url('images/S__218726491.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Optional: Parallax effect */
+    position: relative;
+    color: var(--white); /* Ensure text is readable if on dark background */
+}
+
+#contact::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.7); /* Overlay for readability */
+}
+
+#contact .container {
+    position: relative;
+    z-index: 1;
+}
+
+#contact .section-title {
+    color: var(--white);
+}
+
 .contact-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
