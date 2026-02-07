@@ -88,4 +88,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // We'll trust the CSS I wrote initially runs on load, but for elements below fold, 
     // it's better to pause them.
     // For now, let's just observe them.
+    // Contact Form Submission
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Check reCAPTCHA
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (recaptchaResponse.length === 0) {
+                alert('ロボットではありません（reCAPTCHA）にチェックを入れてください。');
+                return;
+            }
+
+            // Demo Alert
+            alert('お問い合わせありがとうございます。\n（これはデモです。実際には送信されていません。）');
+            contactForm.reset();
+            grecaptcha.reset();
+        });
+    }
 });

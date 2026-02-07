@@ -23,6 +23,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -299,6 +300,68 @@
 
     <!-- Contact Section -->
     <section id="contact" class="section">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-subtitle">Contact</span>
+                <h2 class="section-title">お問い合わせ</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="contact-wrapper">
+                <!-- Contact Info -->
+                <div class="contact-info">
+                    <h3>お問い合わせについて</h3>
+                    <p>
+                        演奏依頼、入団に関するご質問、その他のお問い合わせは、<br>
+                        こちらのフォームよりお気軽にご連絡ください。
+                    </p>
+                    <p>
+                        <i class="fas fa-clock" style="color: var(--secondary-color); margin-right: 10px;"></i>
+                        返信には2〜3日いただく場合がございます。
+                    </p>
+
+                    <!-- Social Links -->
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/kumamoto_shimin.music/" target="_blank" class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">お名前 <span style="color: red;">*</span></label>
+                        <input type="text" id="name" name="name" required placeholder="例：熊本 太郎">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">メールアドレス <span style="color: red;">*</span></label>
+                        <input type="email" id="email" name="email" required placeholder="例：kumamoto@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">件名 <span style="color: red;">*</span></label>
+                        <select id="subject" name="subject" required>
+                            <option value="">選択してください</option>
+                            <option value="recruitment">入団・見学について</option>
+                            <option value="request">演奏依頼について</option>
+                            <option value="other">その他のお問い合わせ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">お問い合わせ内容 <span style="color: red;">*</span></label>
+                        <textarea id="message" name="message" rows="5" required
+                            placeholder="お問い合わせ内容をご記入ください"></textarea>
+                    </div>
+
+                    <!-- reCAPTCHA (Test Key) -->
+                    <div class="form-group">
+                        <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-full">送信する</button>
+                </form>
+            </div>
+        </div>
     </section>
 
     <!-- Footer -->
