@@ -119,4 +119,52 @@ document.addEventListener('DOMContentLoaded', function () {
         const randomImage = images[Math.floor(Math.random() * images.length)];
         aboutImage.src = randomImage;
     }
+
+    // Musical Note Effect
+    const createNote = (x, y) => {
+        const note = document.createElement('span');
+        note.classList.add('musical-note');
+        note.style.left = `${x}px`;
+        note.style.top = `${y}px`;
+
+        const notes = ['♪', '♫', '♬', '♩'];
+        note.innerText = notes[Math.floor(Math.random() * notes.length)];
+
+        // Randomize color slightly
+        const colors = ['#b45309', '#d97706', '#0f172a', '#334155'];
+        note.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+        // Randomize size
+        note.style.fontSize = Math.random() * 1 + 1 + 'rem'; // 1rem to 2rem
+
+        document.body.appendChild(note);
+
+        // Remove after animation
+        setTimeout(() => {
+            note.remove();
+        }, 1000);
+    };
+
+    let lastNoteTime = 0;
+    const throttleDelay = 100; // ms
+
+    const handleMove = (e) => {
+        const now = Date.now();
+        if (now - lastNoteTime < throttleDelay) return;
+
+        let x, y;
+        if (e.type === 'touchmove') {
+            x = e.touches[0].clientX;
+            y = e.touches[0].clientY;
+        } else {
+            x = e.clientX;
+            y = e.clientY;
+        }
+
+        createNote(x, y);
+        lastNoteTime = now;
+    };
+
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('touchmove', handleMove);
 });
