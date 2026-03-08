@@ -196,10 +196,13 @@
                     <button id="load-template-btn" class="secondary-btn small mt-fui-en">Load</button>
                 </div>
                 <div class="sequence-list" id="sequence-list">
-                    <!-- Sequence items will be added here -->
+                    <!-- practice-group 単位でブロックを格納。各グループは練習番号ごと -->
                     <div class="empty-state">No steps added yet.</div>
                 </div>
-                <button id="add-step-btn" class="secondary-btn mt-fui-en">+ Add Step</button>
+                <div class="sequence-add-btns">
+                    <button id="add-group-btn" class="secondary-btn small mt-fui-en">+ グループ</button>
+                    <button id="add-step-btn" class="secondary-btn mt-fui-en">+ ブロック</button>
+                </div>
 
                 <div class="sequence-options">
                     <label class="mt-fui-en">
@@ -222,11 +225,21 @@
         </main>
     </div>
 
+    <template id="practice-group-template">
+        <div class="practice-group">
+            <div class="practice-group-header">
+                <span class="group-label mt-fui-en">練習番号</span>
+                <input type="text" class="group-practice-no" placeholder="A, 1など" maxlength="12" title="練習番号">
+                <button type="button" class="add-block-btn" title="ブロック追加">+</button>
+                <button type="button" class="remove-group" title="グループ削除">×</button>
+            </div>
+            <div class="practice-group-blocks"></div>
+        </div>
+    </template>
     <template id="step-template">
         <div class="sequence-step" data-step-index="0">
             <div class="step-header">
                 <span class="step-number">#1</span>
-                <input type="text" class="step-practice-no" placeholder="練習番号 (A, 1など)" maxlength="12" title="任意の練習番号">
                 <select class="step-type-select">
                     <option value="normal">Normal</option>
                     <option value="fermata">Fermata (Wait)</option>

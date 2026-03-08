@@ -27,9 +27,9 @@ class Metronome {
         this.soundFreqDownbeat = 1200;
         this.soundFreqBeat = 800;
 
-        // Sequence Mode
+        // Sequence Mode（練習番号ごとに blocks を格納）
         this.mode = 'simple';
-        this.sequence = [];
+        this.sequence = []; // [{ practiceNo: string, blocks: Step[] }, ...]
         this.startFromStepIndex = null; // その場所から練習用
         this.currentSequenceStepIndex = 0;
         this.barsPlayedInCurrentStep = 0;
@@ -194,6 +194,8 @@ class Metronome {
         // Sequence Controls
         const addStepBtn = document.getElementById('add-step-btn');
         if (addStepBtn) addStepBtn.addEventListener('click', () => this.addSequenceStep());
+        const addGroupBtn = document.getElementById('add-group-btn');
+        if (addGroupBtn) addGroupBtn.addEventListener('click', () => this.addSequenceGroup());
 
         const loadTemplateBtn = document.getElementById('load-template-btn');
         const templateSelect = document.getElementById('template-select');
@@ -304,8 +306,13 @@ class Metronome {
         }
     }
 
+    getFlatSteps() {
+        return this.sequence.flatMap(g => g.blocks || []);
+    }
+
     startFromStep(stepIndex) {
-        if (stepIndex < 0 || stepIndex >= this.sequence.length) return;
+        const flat = this.getFlatSteps();
+        if (stepIndex < 0 || stepIndex >= flat.length) return;
         this.startFromStepIndex = stepIndex;
         if (this.mode !== 'sequence') {
             this.setMode('sequence');
@@ -435,7 +442,8 @@ class Metronome {
 
     finishSequenceStep() {
         this.currentSequenceStepIndex++;
-        if (this.currentSequenceStepIndex >= this.sequence.length) {
+        const flat = this.getFlatSteps();
+        if (this.currentSequenceStepIndex >= flat.length) {
             if (document.getElementById('sequence-loop').checked) {
                 this.currentSequenceStepIndex = 0;
                 this.loadStep(0);
@@ -449,13 +457,14 @@ class Metronome {
     }
 
     getTotalBarsInSequence() {
-        return this.sequence.reduce((sum, s) => sum + (s.type === 'normal' ? (s.bars || 0) : 0), 0);
+        return this.getFlatSteps().reduce((sum, s) => sum + (s.type === 'normal' ? (s.bars || 0) : 0), 0);
     }
 
     getCumulativeBarsPlayed() {
+        const flat = this.getFlatSteps();
         let sum = 0;
         for (let i = 0; i < this.currentSequenceStepIndex; i++) {
-            const s = this.sequence[i];
+            const s = flat[i];
             if (s.type === 'normal') sum += s.bars || 0;
         }
         return sum + (this.isFermata ? 0 : this.barsPlayedInCurrentStep);
@@ -475,10 +484,11 @@ class Metronome {
         const totalEl = document.getElementById('seq-total-bars');
         if (!visStep || !visBar) return;
 
+        const flat = this.getFlatSteps();
         visStep.textContent = this.currentSequenceStepIndex + 1;
-        visTotalSteps.textContent = this.sequence.length;
+        visTotalSteps.textContent = flat.length;
 
-        const step = this.sequence[this.currentSequenceStepIndex];
+        const step = flat[this.currentSequenceStepIndex];
         const practiceLabel = step && step.practiceNo ? ' [' + step.practiceNo + ']' : '';
         const visPractice = document.getElementById('seq-vis-practice');
         const curPractice = document.getElementById('seq-current-practice');
@@ -510,7 +520,7 @@ class Metronome {
     }
 
     loadStep(index) {
-        const step = this.sequence[index];
+        const step = this.getFlatSteps()[index];
         if (!step) return;
 
         if (step.type === 'fermata') {
@@ -719,6 +729,64 @@ class Metronome {
         }, 100);
     }
 
+    _createStepBlock(stepData) {
+        const stepTemplate = document.getElementById('step-template');
+        const clone = stepTemplate.content.cloneNode(true);
+        const div = clone.querySelector('.sequence-step');
+        const data = stepData || { type: 'normal', bpmStart: 76, bpmEnd: 76, signature: '2/2', bars: 4 };
+
+        div.querySelector('.step-type-select').value = data.type || 'normal';
+        const isFermata = (data.type === 'fermata');
+        div.querySelector('.type-normal').style.display = isFermata ? 'none' : 'grid';
+        div.querySelector('.type-fermata').style.display = isFermata ? 'block' : 'none';
+        if (data.type === 'fermata') {
+            div.querySelector('.step-duration').value = data.duration ?? 2.0;
+        } else {
+            div.querySelector('.step-bpm-start').value = data.bpmStart ?? 76;
+            div.querySelector('.step-bpm-end').value = data.bpmEnd ?? data.bpmStart ?? 76;
+            const hasRamp = data.bpmStart !== data.bpmEnd;
+            div.querySelector('.step-ramp-toggle').checked = hasRamp;
+            div.querySelector('.ramp-end-group').style.display = hasRamp ? 'block' : 'none';
+            div.querySelector('.step-signature').value = data.signature || '2/2';
+            div.querySelector('.step-bars').value = data.bars ?? 4;
+        }
+
+        const list = document.getElementById('sequence-list');
+        const bindStepEvents = (stepEl) => {
+            stepEl.querySelectorAll('input, select').forEach(input => {
+                input.addEventListener('change', () => {
+                    if (input.classList.contains('step-type-select')) {
+                        const f = (input.value === 'fermata');
+                        stepEl.querySelector('.type-normal').style.display = f ? 'none' : 'grid';
+                        stepEl.querySelector('.type-fermata').style.display = f ? 'block' : 'none';
+                    }
+                    if (input.classList.contains('step-ramp-toggle')) {
+                        stepEl.querySelector('.ramp-end-group').style.display = input.checked ? 'block' : 'none';
+                    }
+                    this.syncSequenceFromDOM();
+                });
+            });
+            stepEl.querySelector('.remove-step')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                stepEl.remove();
+                this.syncSequenceFromDOM();
+                this.updateStepNumbers();
+            });
+            stepEl.querySelector('.start-from-here-btn')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = this._getFlatStepIndex(stepEl);
+                if (idx >= 0) this.startFromStep(idx);
+            });
+        };
+        bindStepEvents(div);
+        return div;
+    }
+
+    _getFlatStepIndex(stepEl) {
+        const all = document.querySelectorAll('#sequence-list .sequence-step');
+        return Array.from(all).indexOf(stepEl);
+    }
+
     loadTemplate(templateId) {
         const tpl = this.templates[templateId];
         if (!tpl || !tpl.steps) return;
@@ -727,67 +795,54 @@ class Metronome {
         list.innerHTML = '';
         list.querySelector('.empty-state')?.remove();
 
-        const stepTemplate = document.getElementById('step-template');
-        tpl.steps.forEach((stepData, index) => {
-            const clone = stepTemplate.content.cloneNode(true);
-            const div = clone.querySelector('.sequence-step');
+        const groupTpl = document.getElementById('practice-group-template');
 
-            div.querySelector('.step-number').textContent = '#' + (index + 1);
-            div.querySelector('.step-type-select').value = stepData.type || 'normal';
-
-            const isFermata = (stepData.type === 'fermata');
-            div.querySelector('.type-normal').style.display = isFermata ? 'none' : 'grid';
-            div.querySelector('.type-fermata').style.display = isFermata ? 'block' : 'none';
-
-            if (stepData.type === 'fermata') {
-                div.querySelector('.step-duration').value = stepData.duration || 2.0;
+        // 練習番号ごとにグループ化
+        const groups = [];
+        let prev = null;
+        for (const s of tpl.steps) {
+            const pn = (s.practiceNo != null && s.practiceNo !== '') ? String(s.practiceNo) : '';
+            if (prev !== pn) {
+                groups.push({ practiceNo: pn, blocks: [s] });
+                prev = pn;
             } else {
-                div.querySelector('.step-bpm-start').value = stepData.bpmStart ?? 76;
-                div.querySelector('.step-bpm-end').value = stepData.bpmEnd ?? stepData.bpmStart ?? 76;
-                const hasRamp = stepData.bpmStart !== stepData.bpmEnd;
-                div.querySelector('.step-ramp-toggle').checked = hasRamp;
-                div.querySelector('.ramp-end-group').style.display = hasRamp ? 'block' : 'none';
-                div.querySelector('.step-signature').value = stepData.signature || '2/2';
-                div.querySelector('.step-bars').value = stepData.bars ?? 4;
+                groups[groups.length - 1].blocks.push(s);
             }
+        }
 
-            const pnInput = div.querySelector('.step-practice-no');
-            if (pnInput && stepData.practiceNo != null) pnInput.value = stepData.practiceNo || '';
+        groups.forEach(grp => {
+            const gClone = groupTpl.content.cloneNode(true);
+            const groupDiv = gClone.querySelector('.practice-group');
+            const header = groupDiv.querySelector('.group-practice-no');
+            const blocksContainer = groupDiv.querySelector('.practice-group-blocks');
+            header.value = grp.practiceNo;
 
-            list.appendChild(div);
+            header.addEventListener('change', () => this.syncSequenceFromDOM());
+            header.addEventListener('input', () => this.syncSequenceFromDOM());
 
-            const inputs = div.querySelectorAll('input, select');
-            inputs.forEach(input => {
-                input.addEventListener('change', () => {
-                    if (input.classList.contains('step-type-select')) {
-                        const isF = (input.value === 'fermata');
-                        div.querySelector('.type-normal').style.display = isF ? 'none' : 'grid';
-                        div.querySelector('.type-fermata').style.display = isF ? 'block' : 'none';
-                    }
-                    if (input.classList.contains('step-ramp-toggle')) {
-                        div.querySelector('.ramp-end-group').style.display = input.checked ? 'block' : 'none';
-                    }
-                    this.syncSequenceFromDOM();
-                });
+            groupDiv.querySelector('.add-block-btn')?.addEventListener('click', () => {
+                const block = this._createStepBlock();
+                blocksContainer.appendChild(block);
+                this.updateStepNumbers();
+                this.syncSequenceFromDOM();
             });
 
-            div.querySelector('.remove-step').addEventListener('click', (e) => {
+            groupDiv.querySelector('.remove-group')?.addEventListener('click', (e) => {
                 e.stopPropagation();
-                div.remove();
+                groupDiv.remove();
                 this.syncSequenceFromDOM();
                 this.updateStepNumbers();
             });
 
-            const startFromHereBtn = div.querySelector('.start-from-here-btn');
-            if (startFromHereBtn) {
-                startFromHereBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const idx = Array.from(list.querySelectorAll('.sequence-step')).indexOf(div);
-                    if (idx >= 0) this.startFromStep(idx);
-                });
-            }
+            grp.blocks.forEach(blockData => {
+                const block = this._createStepBlock(blockData);
+                blocksContainer.appendChild(block);
+            });
+
+            list.appendChild(groupDiv);
         });
 
+        this.updateStepNumbers();
         this.syncSequenceFromDOM();
     }
 
@@ -795,52 +850,72 @@ class Metronome {
         const list = document.getElementById('sequence-list');
         if (list.querySelector('.empty-state')) list.innerHTML = '';
 
-        const template = document.getElementById('step-template');
-        const clone = template.content.cloneNode(true);
-        const div = clone.querySelector('.sequence-step');
+        const groupTpl = document.getElementById('practice-group-template');
+        const lastGroup = list.querySelector('.practice-group:last-child');
+        const blocksContainer = lastGroup?.querySelector('.practice-group-blocks');
 
-        list.appendChild(div);
-        this.updateStepNumbers();
-        this.syncSequenceFromDOM();
-
-        // Listeners
-        const inputs = div.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            input.addEventListener('change', () => {
-                // Formatting UI
-                if (input.classList.contains('step-type-select')) {
-                    const isFermata = (input.value === 'fermata');
-                    div.querySelector('.type-normal').style.display = isFermata ? 'none' : 'grid';
-                    div.querySelector('.type-fermata').style.display = isFermata ? 'block' : 'none';
-                }
-                if (input.classList.contains('step-ramp-toggle')) {
-                    const isRamp = input.checked;
-                    div.querySelector('.ramp-end-group').style.display = isRamp ? 'block' : 'none';
-                }
+        if (blocksContainer) {
+            const block = this._createStepBlock();
+            blocksContainer.appendChild(block);
+        } else {
+            const gClone = groupTpl.content.cloneNode(true);
+            const groupDiv = gClone.querySelector('.practice-group');
+            const blocksContainerNew = groupDiv.querySelector('.practice-group-blocks');
+            groupDiv.querySelector('.group-practice-no').addEventListener('input', () => this.syncSequenceFromDOM());
+            groupDiv.querySelector('.add-block-btn')?.addEventListener('click', () => {
+                const block = this._createStepBlock();
+                blocksContainerNew.appendChild(block);
+                this.updateStepNumbers();
                 this.syncSequenceFromDOM();
             });
-        });
+            groupDiv.querySelector('.remove-group')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                groupDiv.remove();
+                this.syncSequenceFromDOM();
+                this.updateStepNumbers();
+            });
+            const block = this._createStepBlock();
+            blocksContainerNew.appendChild(block);
+            list.appendChild(groupDiv);
+        }
 
-        div.querySelector('.remove-step').addEventListener('click', (e) => {
+        this.updateStepNumbers();
+        this.syncSequenceFromDOM();
+    }
+
+    addSequenceGroup() {
+        const list = document.getElementById('sequence-list');
+        if (list.querySelector('.empty-state')) list.innerHTML = '';
+
+        const groupTpl = document.getElementById('practice-group-template');
+        const gClone = groupTpl.content.cloneNode(true);
+        const groupDiv = gClone.querySelector('.practice-group');
+        const blocksContainerNew = groupDiv.querySelector('.practice-group-blocks');
+
+        groupDiv.querySelector('.group-practice-no').addEventListener('input', () => this.syncSequenceFromDOM());
+        groupDiv.querySelector('.add-block-btn')?.addEventListener('click', () => {
+            const block = this._createStepBlock();
+            blocksContainerNew.appendChild(block);
+            this.updateStepNumbers();
+            this.syncSequenceFromDOM();
+        });
+        groupDiv.querySelector('.remove-group')?.addEventListener('click', (e) => {
             e.stopPropagation();
-            div.remove();
+            groupDiv.remove();
             this.syncSequenceFromDOM();
             this.updateStepNumbers();
         });
 
-        const startFromHereBtn = div.querySelector('.start-from-here-btn');
-        if (startFromHereBtn) {
-            startFromHereBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const list = document.getElementById('sequence-list');
-                const idx = Array.from(list.querySelectorAll('.sequence-step')).indexOf(div);
-                if (idx >= 0) this.startFromStep(idx);
-            });
-        }
+        const block = this._createStepBlock();
+        blocksContainerNew.appendChild(block);
+        list.appendChild(groupDiv);
+
+        this.updateStepNumbers();
+        this.syncSequenceFromDOM();
     }
 
     updateStepNumbers() {
-        document.querySelectorAll('.sequence-step').forEach((step, index) => {
+        document.querySelectorAll('#sequence-list .sequence-step').forEach((step, index) => {
             const numEl = step.querySelector('.step-number');
             if (numEl) numEl.textContent = '#' + (index + 1);
             step.dataset.stepIndex = index;
@@ -848,29 +923,32 @@ class Metronome {
     }
 
     syncSequenceFromDOM() {
-        const steps = document.querySelectorAll('.sequence-step');
-        this.sequence = Array.from(steps).map(step => {
-            const type = step.querySelector('.step-type-select').value;
-            const practiceNo = (step.querySelector('.step-practice-no')?.value || '').trim();
-            const base = { practiceNo: practiceNo || undefined };
-            if (type === 'fermata') {
-                return Object.assign(base, {
-                    type: 'fermata',
-                    duration: parseFloat(step.querySelector('.step-duration').value)
-                });
-            } else {
+        const list = document.getElementById('sequence-list');
+        const groupEls = list.querySelectorAll('.practice-group');
+        this.sequence = Array.from(groupEls).map(group => {
+            const practiceNo = (group.querySelector('.group-practice-no')?.value || '').trim() || undefined;
+            const steps = group.querySelectorAll('.practice-group-blocks .sequence-step');
+            const blocks = Array.from(steps).map(step => {
+                const type = step.querySelector('.step-type-select').value;
+                if (type === 'fermata') {
+                    return {
+                        type: 'fermata',
+                        practiceNo,
+                        duration: parseFloat(step.querySelector('.step-duration').value)
+                    };
+                }
                 const bpmStart = parseInt(step.querySelector('.step-bpm-start').value);
                 const isRamp = step.querySelector('.step-ramp-toggle').checked;
                 const bpmEnd = isRamp ? parseInt(step.querySelector('.step-bpm-end').value) : bpmStart;
-
-                return Object.assign(base, {
+                return {
                     type: 'normal',
-                    bpmStart: bpmStart,
-                    bpmEnd: bpmEnd,
+                    practiceNo,
+                    bpmStart, bpmEnd,
                     signature: step.querySelector('.step-signature').value,
                     bars: parseInt(step.querySelector('.step-bars').value)
-                });
-            }
+                };
+            });
+            return { practiceNo, blocks };
         });
         this.updateStepNumbers();
     }

@@ -670,6 +670,86 @@ select option {
 }
 
 /* Sequence Editor */
+.practice-group {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+.practice-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.group-label {
+    font-weight: 500;
+}
+
+.group-practice-no {
+    width: 72px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    color: var(--text-primary);
+}
+
+.group-practice-no::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.add-block-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.add-block-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.remove-group {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-left: auto;
+}
+
+.remove-group:hover {
+    color: var(--danger);
+}
+
+.practice-group-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sequence-add-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
 .sequence-list {
     max-height: 240px;
     overflow-y: auto;
@@ -789,6 +869,7 @@ select option {
 .focus-active #bpm-slider,
 .focus-active .settings-grid,
 .focus-active .sequence-list,
+.focus-active .sequence-add-btns,
 .focus-active #add-step-btn,
 .focus-active .sequence-options {
     opacity: 0;
