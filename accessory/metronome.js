@@ -32,6 +32,37 @@ class Metronome {
         this.stepStartTempo = 120;
         this.stepEndTempo = 120;
 
+        // Templates
+        this.templates = {
+            templateA: {
+                name: 'templateA',
+                tempoRef: '2分音符=76~90',
+                steps: [
+                    { type: 'normal', signature: '2/2', bars: 4, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '3/4', bars: 1, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 2, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '3/4', bars: 1, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 14, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 8, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 9, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 12, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 5, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '3/4', bars: 8, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 2, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 8, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 3, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '5/4', bars: 1, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 1, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '5/4', bars: 1, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 6, bpmStart: 76, bpmEnd: 90 },
+                    { type: 'normal', signature: '2/2', bars: 9, bpmStart: 76, bpmEnd: 90 }
+                ]
+            }
+        };
+
         // UI references
         this.ui = {
             playBtn: document.getElementById('play-btn'),
@@ -110,6 +141,15 @@ class Metronome {
         // Sequence Controls
         const addStepBtn = document.getElementById('add-step-btn');
         if (addStepBtn) addStepBtn.addEventListener('click', () => this.addSequenceStep());
+
+        const loadTemplateBtn = document.getElementById('load-template-btn');
+        const templateSelect = document.getElementById('template-select');
+        if (loadTemplateBtn && templateSelect) {
+            loadTemplateBtn.addEventListener('click', () => {
+                const id = templateSelect.value;
+                if (id) this.loadTemplate(id);
+            });
+        }
 
         // Audio Context interaction
         ['click', 'touchstart'].forEach(e => {
@@ -510,6 +550,65 @@ class Metronome {
             this.ui.beatVisual.classList.remove('active');
             this.ui.beatVisual.classList.remove('downbeat');
         }, 100);
+    }
+
+    loadTemplate(templateId) {
+        const tpl = this.templates[templateId];
+        if (!tpl || !tpl.steps) return;
+
+        const list = document.getElementById('sequence-list');
+        list.innerHTML = '';
+        list.querySelector('.empty-state')?.remove();
+
+        const stepTemplate = document.getElementById('step-template');
+        tpl.steps.forEach((stepData, index) => {
+            const clone = stepTemplate.content.cloneNode(true);
+            const div = clone.querySelector('.sequence-step');
+
+            div.querySelector('.step-number').textContent = '#' + (index + 1);
+            div.querySelector('.step-type-select').value = stepData.type || 'normal';
+
+            const isFermata = (stepData.type === 'fermata');
+            div.querySelector('.type-normal').style.display = isFermata ? 'none' : 'grid';
+            div.querySelector('.type-fermata').style.display = isFermata ? 'block' : 'none';
+
+            if (stepData.type === 'fermata') {
+                div.querySelector('.step-duration').value = stepData.duration || 2.0;
+            } else {
+                div.querySelector('.step-bpm-start').value = stepData.bpmStart ?? 76;
+                div.querySelector('.step-bpm-end').value = stepData.bpmEnd ?? stepData.bpmStart ?? 76;
+                const hasRamp = stepData.bpmStart !== stepData.bpmEnd;
+                div.querySelector('.step-ramp-toggle').checked = hasRamp;
+                div.querySelector('.ramp-end-group').style.display = hasRamp ? 'block' : 'none';
+                div.querySelector('.step-signature').value = stepData.signature || '2/2';
+                div.querySelector('.step-bars').value = stepData.bars ?? 4;
+            }
+
+            list.appendChild(div);
+
+            const inputs = div.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    if (input.classList.contains('step-type-select')) {
+                        const isF = (input.value === 'fermata');
+                        div.querySelector('.type-normal').style.display = isF ? 'none' : 'grid';
+                        div.querySelector('.type-fermata').style.display = isF ? 'block' : 'none';
+                    }
+                    if (input.classList.contains('step-ramp-toggle')) {
+                        div.querySelector('.ramp-end-group').style.display = input.checked ? 'block' : 'none';
+                    }
+                    this.syncSequenceFromDOM();
+                });
+            });
+
+            div.querySelector('.remove-step').addEventListener('click', () => {
+                div.remove();
+                this.syncSequenceFromDOM();
+                this.updateStepNumbers();
+            });
+        });
+
+        this.syncSequenceFromDOM();
     }
 
     addSequenceStep() {

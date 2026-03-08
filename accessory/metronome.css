@@ -341,6 +341,36 @@ select option {
 }
 
 
+/* Template Row */
+.template-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.template-row label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    width: 60px;
+}
+
+.template-row #template-select {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.template-row .secondary-btn.small {
+    padding: 8px 16px;
+    white-space: nowrap;
+}
+
 /* Sequence Editor */
 .sequence-list {
     max-height: 240px;

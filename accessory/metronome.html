@@ -56,7 +56,9 @@
                             <option value="4/4" selected>4/4</option>
                             <option value="3/4">3/4</option>
                             <option value="2/4">2/4</option>
+                            <option value="2/2">2/2</option>
                             <option value="1/4">1/4</option>
+                            <option value="5/4">5/4</option>
                             <option value="6/8">6/8</option>
                             <option value="5/8">5/8</option>
                             <option value="9/8-2223">9/8 (2+2+2+3)</option>
@@ -85,6 +87,14 @@
 
             <!-- Sequence Editor (Sequence Mode) -->
             <div id="sequence-controls" class="controls-section hidden">
+                <div class="template-row">
+                    <label>Template</label>
+                    <select id="template-select">
+                        <option value="">— 選択 —</option>
+                        <option value="templateA">templateA</option>
+                    </select>
+                    <button id="load-template-btn" class="secondary-btn small">Load</button>
+                </div>
                 <div class="sequence-list" id="sequence-list">
                     <!-- Sequence items will be added here -->
                     <div class="empty-state">No steps added yet.</div>
@@ -147,7 +157,9 @@
                         <option value="4/4">4/4</option>
                         <option value="3/4">3/4</option>
                         <option value="2/4">2/4</option>
+                        <option value="2/2">2/2</option>
                         <option value="1/4">1/4</option>
+                        <option value="5/4">5/4</option>
                         <option value="6/8">6/8</option>
                         <option value="5/8">5/8</option>
                         <option value="9/8-2223">9/8 (2+2+2+3)</option>
