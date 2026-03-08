@@ -7,12 +7,14 @@
 }
 
 :root {
-    --fui-bg: #030508;
-    --fui-accent: #00ff88;
-    --fui-accent-rgba: rgba(0, 255, 136, 0.9);
-    --fui-accent-dim: rgba(0, 255, 136, 0.3);
-    --fui-grid-line: rgba(0, 255, 136, 0.04);
-    --fui-scanline: rgba(0, 255, 136, 0.05);
+    --fui-bg: #fafafa;
+    --fui-text: #4b5563;
+    --fui-text-dim: #9ca3af;
+    --fui-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --fui-text-shadow-strong: 0 2px 4px rgba(0, 0, 0, 0.12);
+    --fui-grid-line: rgba(0, 0, 0, 0.04);
+    --fui-scanline: rgba(0, 0, 0, 0.03);
+    --fui-border: rgba(0, 0, 0, 0.08);
 }
 
 /* 英字のみ GAU Root（スプラッシュ内の英語テキスト用） */
@@ -83,7 +85,7 @@
 .fui-vignette {
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 40%, rgba(3, 5, 8, 0.6) 100%);
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.04) 100%);
     pointer-events: none;
 }
 
@@ -98,7 +100,7 @@
     position: absolute;
     width: 24px;
     height: 24px;
-    border-color: var(--fui-accent-dim);
+    border-color: var(--fui-border);
     border-style: solid;
     border-width: 0;
 }
@@ -129,6 +131,24 @@
     right: 0;
     border-bottom-width: 2px;
     border-right-width: 2px;
+}
+
+/* Now Loading... (Phase 1〜3、TAP TO START 表示まで) */
+.fui-loading-indicator {
+    position: fixed;
+    bottom: env(safe-area-inset-bottom, 0);
+    right: env(safe-area-inset-right, 0);
+    margin: 16px;
+    font-size: 0.75rem;
+    color: var(--fui-text-dim);
+    letter-spacing: 0.1em;
+    text-shadow: var(--fui-text-shadow);
+    z-index: 5;
+    opacity: 0.8;
+}
+
+.fui-loading-indicator.hidden {
+    display: none;
 }
 
 /* 中央コンテンツ */
@@ -163,8 +183,9 @@
 /* Phase 1: Welcome */
 .fui-welcome {
     font-size: clamp(1.2rem, 4vw, 1.8rem);
-    color: var(--fui-accent);
+    color: var(--fui-text);
     letter-spacing: 0.2em;
+    text-shadow: var(--fui-text-shadow);
     animation: fui-blink 1s ease-in-out;
 }
 
@@ -176,18 +197,19 @@
 /* Phase 2: Typewriter */
 .fui-typewriter-wrap {
     font-size: clamp(0.7rem, 2.5vw, 1rem);
-    color: var(--fui-accent);
+    color: var(--fui-text);
     line-height: 1.6;
     max-width:  min(90vw, 520px);
     text-align: left;
     display: inline-block;
+    text-shadow: var(--fui-text-shadow);
 }
 
 .fui-cursor {
     display: inline-block;
     width: 2px;
     height: 1em;
-    background: var(--fui-accent);
+    background: var(--fui-text);
     margin-left: 2px;
     vertical-align: text-bottom;
     animation: fui-cursor-blink 0.6s step-end infinite;
@@ -210,9 +232,9 @@
 .fui-acronym-lower,
 .fui-acronym-upper {
     font-size: clamp(1.2rem, 5vw, 2.2rem);
-    color: var(--fui-accent);
+    color: var(--fui-text);
     letter-spacing: 0.15em;
-    text-shadow: 0 0 20px var(--fui-accent-dim);
+    text-shadow: var(--fui-text-shadow-strong);
 }
 
 .fui-acronym-upper {
@@ -236,37 +258,39 @@
 #fui-phase-final .fui-sub,
 #fui-phase-final .fui-desc {
     font-size: clamp(0.75rem, 2.5vw, 1rem);
-    color: var(--fui-accent-dim);
+    color: var(--fui-text-dim);
     letter-spacing: 0.1em;
     margin-bottom: 8px;
+    text-shadow: var(--fui-text-shadow);
 }
 
 #fui-phase-final .fui-line {
     width: 40px;
     height: 1px;
-    background: var(--fui-accent-dim);
+    background: var(--fui-border);
     margin: 12px auto;
 }
 
 #fui-phase-final .fui-acronym {
     font-size: clamp(1.2rem, 5vw, 2rem);
-    color: var(--fui-accent);
+    color: var(--fui-text);
     letter-spacing: 0.12em;
     margin: 8px 0;
-    text-shadow: 0 0 24px var(--fui-accent-dim);
+    text-shadow: var(--fui-text-shadow-strong);
     animation: fui-glow 2.5s ease-in-out infinite;
 }
 
 @keyframes fui-glow {
-    0%, 100% { opacity: 1; text-shadow: 0 0 24px var(--fui-accent-dim); }
-    50% { opacity: 0.9; text-shadow: 0 0 32px var(--fui-accent-rgba); }
+    0%, 100% { opacity: 1; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.12); }
+    50% { opacity: 0.85; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); }
 }
 
 .fui-tap {
     margin-top: 28px;
     font-size: clamp(0.7rem, 2.5vw, 0.95rem);
-    color: var(--fui-accent);
+    color: var(--fui-text);
     letter-spacing: 0.25em;
+    text-shadow: var(--fui-text-shadow);
     opacity: 0.9;
     animation: fui-tap-pulse 1.5s ease-in-out infinite;
 }

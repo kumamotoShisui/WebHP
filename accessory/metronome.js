@@ -30,6 +30,7 @@ class Metronome {
         // Sequence Mode
         this.mode = 'simple';
         this.sequence = [];
+        this.startFromStepIndex = null; // その場所から練習用
         this.currentSequenceStepIndex = 0;
         this.barsPlayedInCurrentStep = 0;
         this.totalBarsInCurrentStep = 0;
@@ -46,27 +47,41 @@ class Metronome {
                 name: 'templateA',
                 tempoRef: '2分音符=76~90',
                 steps: [
-                    { type: 'normal', signature: '2/2', bars: 4, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '3/4', bars: 1, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 2, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '3/4', bars: 1, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 14, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 8, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 9, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 12, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 5, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '3/4', bars: 8, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 2, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 8, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 3, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '5/4', bars: 1, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 1, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '5/4', bars: 1, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 6, bpmStart: 76, bpmEnd: 90 },
-                    { type: 'normal', signature: '2/2', bars: 9, bpmStart: 76, bpmEnd: 90 }
+                    // A: 小節1-14（5,8小節が3/4、他は2/2）
+                    { type: 'normal', signature: '2/2', bars: 4, bpmStart: 76, bpmEnd: 90, practiceNo: 'A' },   // 1-4
+                    { type: 'normal', signature: '3/4', bars: 1, bpmStart: 76, bpmEnd: 90, practiceNo: 'A' },   // 5
+                    { type: 'normal', signature: '2/2', bars: 2, bpmStart: 76, bpmEnd: 90, practiceNo: 'A' },   // 6-7
+                    { type: 'normal', signature: '3/4', bars: 1, bpmStart: 76, bpmEnd: 90, practiceNo: 'A' },   // 8
+                    { type: 'normal', signature: '2/2', bars: 6, bpmStart: 76, bpmEnd: 90, practiceNo: 'A' },   // 9-14
+                    // B: 15-21 すべて2/2
+                    { type: 'normal', signature: '2/2', bars: 7, bpmStart: 76, bpmEnd: 90, practiceNo: 'B' },
+                    // C: 22-34 すべて2/2
+                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90, practiceNo: 'C' },
+                    // D: 35-47 すべて2/2
+                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90, practiceNo: 'D' },
+                    // E: 48-55 すべて2/2
+                    { type: 'normal', signature: '2/2', bars: 8, bpmStart: 76, bpmEnd: 90, practiceNo: 'E' },
+                    // F: 56-64 すべて2/2
+                    { type: 'normal', signature: '2/2', bars: 9, bpmStart: 76, bpmEnd: 90, practiceNo: 'F' },
+                    // G: 65-81 すべて2/2
+                    { type: 'normal', signature: '2/2', bars: 17, bpmStart: 76, bpmEnd: 90, practiceNo: 'G' },
+                    // H: 82-91（82-89が3/4、90-91が2/2）
+                    { type: 'normal', signature: '3/4', bars: 8, bpmStart: 76, bpmEnd: 90, practiceNo: 'H' },   // 82-89
+                    { type: 'normal', signature: '2/2', bars: 2, bpmStart: 76, bpmEnd: 90, practiceNo: 'H' },   // 90-91
+                    // I: 92-104 すべて2/2
+                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90, practiceNo: 'I' },
+                    // J: 105-117 すべて2/2
+                    { type: 'normal', signature: '2/2', bars: 13, bpmStart: 76, bpmEnd: 90, practiceNo: 'J' },
+                    // K: 118-125 すべて2/2
+                    { type: 'normal', signature: '2/2', bars: 8, bpmStart: 76, bpmEnd: 90, practiceNo: 'K' },
+                    // L: 126-137（129,131が5/4、他は2/2）
+                    { type: 'normal', signature: '2/2', bars: 3, bpmStart: 76, bpmEnd: 90, practiceNo: 'L' },   // 126-128
+                    { type: 'normal', signature: '5/4', bars: 1, bpmStart: 76, bpmEnd: 90, practiceNo: 'L' },   // 129
+                    { type: 'normal', signature: '2/2', bars: 1, bpmStart: 76, bpmEnd: 90, practiceNo: 'L' },   // 130
+                    { type: 'normal', signature: '5/4', bars: 1, bpmStart: 76, bpmEnd: 90, practiceNo: 'L' },   // 131
+                    { type: 'normal', signature: '2/2', bars: 6, bpmStart: 76, bpmEnd: 90, practiceNo: 'L' },   // 132-137
+                    // M: 138-146 すべて2/2（最終小節146）
+                    { type: 'normal', signature: '2/2', bars: 9, bpmStart: 76, bpmEnd: 90, practiceNo: 'M' }    // 138-146
                 ]
             }
         };
@@ -289,6 +304,20 @@ class Metronome {
         }
     }
 
+    startFromStep(stepIndex) {
+        if (stepIndex < 0 || stepIndex >= this.sequence.length) return;
+        this.startFromStepIndex = stepIndex;
+        if (this.mode !== 'sequence') {
+            this.setMode('sequence');
+        }
+        if (!this.isPlaying) {
+            this.start();
+        } else {
+            this.stop();
+            this.start();
+        }
+    }
+
     start() {
         if (!this.audioContext) this.initAudio();
 
@@ -305,11 +334,15 @@ class Metronome {
         this.current16thNote = 0;
         this.nextNoteTime = this.audioContext.currentTime;
 
-        this.currentSequenceStepIndex = 0;
+        const startFrom = (typeof this.startFromStepIndex === 'number' && this.startFromStepIndex >= 0)
+            ? this.startFromStepIndex : 0;
+        this.startFromStepIndex = null;
+
+        this.currentSequenceStepIndex = startFrom;
         this.barsPlayedInCurrentStep = 0;
 
         if (this.mode === 'sequence') {
-            this.loadStep(0);
+            this.loadStep(startFrom);
             const status = document.getElementById('seq-status');
             if (status) status.style.display = 'block';
             const overlay = document.getElementById('seq-progress-overlay');
@@ -368,7 +401,7 @@ class Metronome {
 
             currentInstantTempo = this.stepStartTempo + (this.stepEndTempo - this.stepStartTempo) * p;
             if (this.current16thNote === 0 && this.ui.bpmDisplay) {
-                this.ui.bpmDisplay.textContent = Math.round(currentInstantTempo);
+                this.ui.bpmDisplay.textContent = Math.round(currentInstantTempo * this.tempoMultiplier);
             }
         }
 
@@ -415,10 +448,20 @@ class Metronome {
         }
     }
 
+    getTotalBarsInSequence() {
+        return this.sequence.reduce((sum, s) => sum + (s.type === 'normal' ? (s.bars || 0) : 0), 0);
+    }
+
+    getCumulativeBarsPlayed() {
+        let sum = 0;
+        for (let i = 0; i < this.currentSequenceStepIndex; i++) {
+            const s = this.sequence[i];
+            if (s.type === 'normal') sum += s.bars || 0;
+        }
+        return sum + (this.isFermata ? 0 : this.barsPlayedInCurrentStep);
+    }
+
     updateSequenceState() {
-        const bar = this.barsPlayedInCurrentStep + 1;
-        const curEl = document.getElementById('seq-current-bar');
-        if (curEl) curEl.textContent = bar;
         this.updateSeqProgressDisplay();
     }
 
@@ -428,25 +471,40 @@ class Metronome {
         const visBar = document.getElementById('seq-vis-bar');
         const visTotalBars = document.getElementById('seq-vis-total-bars');
         const progressBar = document.getElementById('seq-progress-bar');
+        const curEl = document.getElementById('seq-current-bar');
+        const totalEl = document.getElementById('seq-total-bars');
         if (!visStep || !visBar) return;
 
         visStep.textContent = this.currentSequenceStepIndex + 1;
         visTotalSteps.textContent = this.sequence.length;
 
+        const step = this.sequence[this.currentSequenceStepIndex];
+        const practiceLabel = step && step.practiceNo ? ' [' + step.practiceNo + ']' : '';
+        const visPractice = document.getElementById('seq-vis-practice');
+        const curPractice = document.getElementById('seq-current-practice');
+        if (visPractice) visPractice.textContent = practiceLabel;
+        if (curPractice) curPractice.textContent = practiceLabel;
+
+        const totalBars = this.getTotalBarsInSequence();
+
         if (this.isFermata) {
             visBar.textContent = '-';
-            if (visTotalBars) visTotalBars.textContent = '-';
-            if (progressBar) progressBar.style.width = '0%';
+            if (visTotalBars) visTotalBars.textContent = totalBars;
+            if (curEl) curEl.textContent = '-';
+            if (totalEl) totalEl.textContent = totalBars;
+            if (progressBar) progressBar.style.width = totalBars > 0 ? Math.min(100, (this.getCumulativeBarsPlayed() / totalBars) * 100) + '%' : '0%';
             return;
         }
 
-        const curBar = this.barsPlayedInCurrentStep + 1;
-        const total = this.totalBarsInCurrentStep;
-        visBar.textContent = curBar;
-        if (visTotalBars) visTotalBars.textContent = total;
+        const cumulative = this.getCumulativeBarsPlayed();
+        const currentBar = cumulative + 1;
+        visBar.textContent = currentBar;
+        if (visTotalBars) visTotalBars.textContent = totalBars;
+        if (curEl) curEl.textContent = currentBar;
+        if (totalEl) totalEl.textContent = totalBars;
 
-        if (progressBar && total > 0) {
-            const pct = Math.min(100, (curBar / total) * 100);
+        if (progressBar && totalBars > 0) {
+            const pct = Math.min(100, (currentBar / totalBars) * 100);
             progressBar.style.width = pct + '%';
         }
     }
@@ -459,11 +517,9 @@ class Metronome {
             this.isFermata = true;
             this.fermataEndTime = this.audioContext.currentTime + (step.duration || 2.0);
             const stepEl = document.getElementById('seq-current-step');
-            const curEl = document.getElementById('seq-current-bar');
-            const totalEl = document.getElementById('seq-total-bars');
             if (stepEl) stepEl.textContent = index + 1 + " (Fermata)";
-            if (curEl) curEl.textContent = "-";
-            if (totalEl) totalEl.textContent = "-";
+            const curPractice = document.getElementById('seq-current-practice');
+            if (curPractice) curPractice.textContent = step.practiceNo ? ' [' + step.practiceNo + ']' : '';
             this.updateSeqProgressDisplay();
             return;
         }
@@ -476,13 +532,11 @@ class Metronome {
         this.totalBarsInCurrentStep = step.bars;
         this.barsPlayedInCurrentStep = 0;
 
-        if (this.ui.bpmDisplay) this.ui.bpmDisplay.textContent = Math.round(this.tempo);
-        const curEl = document.getElementById('seq-current-bar');
-        const totalEl = document.getElementById('seq-total-bars');
+        if (this.ui.bpmDisplay) this.ui.bpmDisplay.textContent = Math.round(this.tempo * this.tempoMultiplier);
         const stepEl = document.getElementById('seq-current-step');
-        if (curEl) curEl.textContent = 1;
-        if (totalEl) totalEl.textContent = step.bars;
         if (stepEl) stepEl.textContent = index + 1;
+        const curPractice = document.getElementById('seq-current-practice');
+        if (curPractice) curPractice.textContent = step.practiceNo ? ' [' + step.practiceNo + ']' : '';
         this.updateSeqProgressDisplay();
     }
 
@@ -628,8 +682,8 @@ class Metronome {
 
         if (p < 0.9) {
             const grad = this.ctx.createLinearGradient(start.x * 300, start.y * 200, curX * 300, curY * 200);
-            grad.addColorStop(0, "rgba(56, 189, 248, 0)");
-            grad.addColorStop(1, "rgba(56, 189, 248, 0.6)");
+            grad.addColorStop(0, "rgba(100, 116, 139, 0)");
+            grad.addColorStop(1, "rgba(100, 116, 139, 0.5)");
             this.ctx.beginPath();
             this.ctx.moveTo(start.x * 300, start.y * 200);
             this.ctx.lineTo(curX * 300, curY * 200);
@@ -641,9 +695,9 @@ class Metronome {
 
         this.ctx.beginPath();
         this.ctx.arc(curX * 300, curY * 200, 8, 0, Math.PI * 2);
-        this.ctx.fillStyle = '#38bdf8';
-        this.ctx.shadowBlur = 15;
-        this.ctx.shadowColor = '#38bdf8';
+        this.ctx.fillStyle = '#64748b';
+        this.ctx.shadowBlur = 12;
+        this.ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
         this.ctx.fill();
     }
 
@@ -697,6 +751,9 @@ class Metronome {
                 div.querySelector('.step-bars').value = stepData.bars ?? 4;
             }
 
+            const pnInput = div.querySelector('.step-practice-no');
+            if (pnInput && stepData.practiceNo != null) pnInput.value = stepData.practiceNo || '';
+
             list.appendChild(div);
 
             const inputs = div.querySelectorAll('input, select');
@@ -714,11 +771,21 @@ class Metronome {
                 });
             });
 
-            div.querySelector('.remove-step').addEventListener('click', () => {
+            div.querySelector('.remove-step').addEventListener('click', (e) => {
+                e.stopPropagation();
                 div.remove();
                 this.syncSequenceFromDOM();
                 this.updateStepNumbers();
             });
+
+            const startFromHereBtn = div.querySelector('.start-from-here-btn');
+            if (startFromHereBtn) {
+                startFromHereBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const idx = Array.from(list.querySelectorAll('.sequence-step')).indexOf(div);
+                    if (idx >= 0) this.startFromStep(idx);
+                });
+            }
         });
 
         this.syncSequenceFromDOM();
@@ -754,16 +821,29 @@ class Metronome {
             });
         });
 
-        div.querySelector('.remove-step').addEventListener('click', () => {
+        div.querySelector('.remove-step').addEventListener('click', (e) => {
+            e.stopPropagation();
             div.remove();
             this.syncSequenceFromDOM();
             this.updateStepNumbers();
         });
+
+        const startFromHereBtn = div.querySelector('.start-from-here-btn');
+        if (startFromHereBtn) {
+            startFromHereBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const list = document.getElementById('sequence-list');
+                const idx = Array.from(list.querySelectorAll('.sequence-step')).indexOf(div);
+                if (idx >= 0) this.startFromStep(idx);
+            });
+        }
     }
 
     updateStepNumbers() {
         document.querySelectorAll('.sequence-step').forEach((step, index) => {
-            step.querySelector('.step-number').textContent = '#' + (index + 1);
+            const numEl = step.querySelector('.step-number');
+            if (numEl) numEl.textContent = '#' + (index + 1);
+            step.dataset.stepIndex = index;
         });
     }
 
@@ -771,25 +851,28 @@ class Metronome {
         const steps = document.querySelectorAll('.sequence-step');
         this.sequence = Array.from(steps).map(step => {
             const type = step.querySelector('.step-type-select').value;
+            const practiceNo = (step.querySelector('.step-practice-no')?.value || '').trim();
+            const base = { practiceNo: practiceNo || undefined };
             if (type === 'fermata') {
-                return {
+                return Object.assign(base, {
                     type: 'fermata',
                     duration: parseFloat(step.querySelector('.step-duration').value)
-                };
+                });
             } else {
                 const bpmStart = parseInt(step.querySelector('.step-bpm-start').value);
                 const isRamp = step.querySelector('.step-ramp-toggle').checked;
                 const bpmEnd = isRamp ? parseInt(step.querySelector('.step-bpm-end').value) : bpmStart;
 
-                return {
+                return Object.assign(base, {
                     type: 'normal',
                     bpmStart: bpmStart,
-                    bpmEnd: bpmEnd, // Logic handled here: if not ramp, end = start
+                    bpmEnd: bpmEnd,
                     signature: step.querySelector('.step-signature').value,
                     bars: parseInt(step.querySelector('.step-bars').value)
-                };
+                });
             }
         });
+        this.updateStepNumbers();
     }
 }
 

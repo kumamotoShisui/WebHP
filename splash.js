@@ -13,6 +13,7 @@
     var typedEl = document.getElementById('fui-typed-text');
     var cursorEl = document.getElementById('fui-cursor');
     var acronymBox = document.getElementById('fui-acronym-box');
+    var loadingEl = document.getElementById('fui-loading');
 
     // カスタマイズ用テキスト（フェーズ2の英文）
     var typewriterText = 'Kumamoto City Wind Orchestra — Where Community Meets Music Since 1982.';
@@ -22,6 +23,9 @@
         [phaseWelcome, phaseTypewriter, phaseAcronym, phaseFinal].forEach(function (p) {
             if (p) p.classList.toggle('active', p === phaseEl);
         });
+        if (loadingEl) {
+            loadingEl.classList.toggle('hidden', phaseEl === phaseFinal);
+        }
     }
 
     function runTypewriter(durationMs, done) {

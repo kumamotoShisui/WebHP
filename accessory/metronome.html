@@ -40,12 +40,14 @@
                     <div class="fui-acronym-upper fui-font-en">KUMAMOTO SIMIN MUSIC</div>
                 </div>
             </div>
+            <div class="fui-loading-indicator fui-font-en" id="fui-loading">Now Loading...</div>
             <div class="fui-phase" id="fui-phase-final">
                 <div class="fui-sub fui-sub-jp">熊本市民吹奏楽団</div>
                 <div class="fui-line"></div>
-                <div class="fui-acronym fui-font-en">KUMAMOTO SIMIN MUSIC</div>
+                <div class="fui-acronym fui-font-en">KUMAMOTO SISUI</div>
                 <div class="fui-line"></div>
                 <div class="fui-desc fui-font-en">Kumamoto City Wind Orchestra</div>
+                <div class="fui-desc fui-font-en">This system made by HoloMoto</div>
                 <div class="fui-tap fui-font-en">TAP TO START</div>
             </div>
         </div>
@@ -53,24 +55,30 @@
 
     <div class="app-background"></div>
     <div class="glass-container">
+        <div class="mt-frame" aria-hidden="true">
+            <span class="mt-corner mt-corner-tl"></span>
+            <span class="mt-corner mt-corner-tr"></span>
+            <span class="mt-corner mt-corner-bl"></span>
+            <span class="mt-corner mt-corner-br"></span>
+        </div>
         <header>
-            <h1>Metronome</h1>
+            <h1 class="mt-fui-en">Metronome</h1>
             <div class="mode-switch">
-                <button id="mode-simple" class="active">Simple</button>
-                <button id="mode-sequence">Sequence</button>
+                <button id="mode-simple" class="active mt-fui-en">Simple</button>
+                <button id="mode-sequence" class="mt-fui-en">Sequence</button>
             </div>
         </header>
 
         <main>
-            <!-- Visual Display -->
-            <div class="visualizer">
+            <!-- Visual Display (FUI: モニター風エリア) -->
+            <div class="visualizer mt-visualizer-frame">
                 <div class="beat-indicator" id="beat-visual"></div>
                 <div class="beat-counter" id="beat-counter">1</div>
                 <canvas id="conductor-canvas" width="300" height="200"></canvas>
                 <!-- Sequence Mode: Bar Progress (visible when playing) -->
                 <div class="seq-progress-overlay hidden" id="seq-progress-overlay">
                     <div class="seq-progress-info">
-                        <span class="seq-step-label">Step <span id="seq-vis-step">1</span> / <span id="seq-vis-total-steps">1</span></span>
+                        <span class="seq-step-label mt-fui-en">Step <span id="seq-vis-step">1</span><span id="seq-vis-practice" class="seq-practice-label"></span> / <span id="seq-vis-total-steps">1</span></span>
                         <span class="seq-bar-label">小節 <span id="seq-vis-bar">1</span> / <span id="seq-vis-total-bars">4</span></span>
                     </div>
                     <div class="seq-progress-bar-wrap">
@@ -79,11 +87,21 @@
                 </div>
             </div>
 
+            <!-- 倍テンポ（Simple / Sequence 共通で常に表示・有効） -->
+            <div class="tempo-mult-row tempo-mult-shared">
+                <label>倍テンポ</label>
+                <div class="tempo-mult-btns">
+                    <button type="button" class="tempo-mult-btn" data-mult="0.5">1/2×</button>
+                    <button type="button" class="tempo-mult-btn active" data-mult="1">1×</button>
+                    <button type="button" class="tempo-mult-btn" data-mult="2">2×</button>
+                </div>
+            </div>
+
             <!-- Main Controls (Simple Mode) -->
             <div id="simple-controls" class="controls-section">
                 <!-- Volume Control -->
                 <div class="control-row volume-control">
-                    <label>Vol</label>
+                    <label class="mt-fui-en">Vol</label>
                     <input type="range" id="volume-slider" min="0" max="300" value="200">
                 </div>
 
@@ -91,7 +109,7 @@
                     <button class="tempo-adjust" id="tempo-minus">-</button>
                     <div class="tempo-value">
                         <span id="bpm-display">120</span>
-                        <span class="bpm-label">BPM</span>
+                        <span class="bpm-label mt-fui-en">BPM</span>
                         <span class="tempo-mult-label" id="tempo-mult-label"></span>
                     </div>
                     <button class="tempo-adjust" id="tempo-plus">+</button>
@@ -99,18 +117,9 @@
 
                 <input type="range" id="bpm-slider" min="30" max="300" value="120">
 
-                <div class="tempo-mult-row">
-                    <label>倍テンポ</label>
-                    <div class="tempo-mult-btns">
-                        <button type="button" class="tempo-mult-btn" data-mult="0.5">1/2×</button>
-                        <button type="button" class="tempo-mult-btn active" data-mult="1">1×</button>
-                        <button type="button" class="tempo-mult-btn" data-mult="2">2×</button>
-                    </div>
-                </div>
-
                 <div class="settings-grid">
                     <div class="setting-item">
-                        <label>Time Sig</label>
+                        <label class="mt-fui-en">Time Sig</label>
                         <select id="time-signature">
                             <option value="4/4" selected>4/4</option>
                             <option value="3/4">3/4</option>
@@ -126,17 +135,17 @@
                         </select>
                     </div>
                     <div class="setting-item">
-                        <label>Pre-count Loops</label>
+                        <label class="mt-fui-en">Pre-count Loops</label>
                         <div class="input-row">
                             <input type="number" id="precount-bars" value="0" min="0" max="9" class="small-input">
-                            <span class="unit">Bars</span>
+                            <span class="unit mt-fui-en">Bars</span>
                         </div>
                     </div>
                     <div class="setting-item">
-                        <label>Display</label>
+                        <label class="mt-fui-en">Display</label>
                         <div class="input-row" style="margin-top: 8px;">
-                            <label
-                                style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #94a3b8; font-size: 0.9rem;">
+                            <label class="mt-fui-en"
+                                style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-secondary); font-size: 0.9rem;">
                                 <input type="checkbox" id="focus-mode-toggle"> Auto-Focus
                             </label>
                         </div>
@@ -179,27 +188,27 @@
             <!-- Sequence Editor (Sequence Mode) -->
             <div id="sequence-controls" class="controls-section hidden">
                 <div class="template-row">
-                    <label>Template</label>
+                    <label class="mt-fui-en">Template</label>
                     <select id="template-select">
                         <option value="">— 選択 —</option>
                         <option value="templateA">templateA</option>
                     </select>
-                    <button id="load-template-btn" class="secondary-btn small">Load</button>
+                    <button id="load-template-btn" class="secondary-btn small mt-fui-en">Load</button>
                 </div>
                 <div class="sequence-list" id="sequence-list">
                     <!-- Sequence items will be added here -->
                     <div class="empty-state">No steps added yet.</div>
                 </div>
-                <button id="add-step-btn" class="secondary-btn">+ Add Step</button>
+                <button id="add-step-btn" class="secondary-btn mt-fui-en">+ Add Step</button>
 
                 <div class="sequence-options">
-                    <label>
+                    <label class="mt-fui-en">
                         <input type="checkbox" id="sequence-loop"> Loop Sequence
                     </label>
                 </div>
 
-                <div class="current-step-display" id="seq-status" style="display:none;">
-                    Step <span id="seq-current-step">1</span> · 小節 <span id="seq-current-bar">1</span>/<span
+                <div class="current-step-display mt-fui-en" id="seq-status" style="display:none;">
+                    Step <span id="seq-current-step">1</span><span id="seq-current-practice" class="seq-practice-label"></span> · 小節 <span id="seq-current-bar">1</span>/<span
                         id="seq-total-bars">4</span>
                 </div>
             </div>
@@ -214,13 +223,15 @@
     </div>
 
     <template id="step-template">
-        <div class="sequence-step">
+        <div class="sequence-step" data-step-index="0">
             <div class="step-header">
                 <span class="step-number">#1</span>
+                <input type="text" class="step-practice-no" placeholder="練習番号 (A, 1など)" maxlength="12" title="任意の練習番号">
                 <select class="step-type-select">
                     <option value="normal">Normal</option>
                     <option value="fermata">Fermata (Wait)</option>
                 </select>
+                <button type="button" class="start-from-here-btn" title="その場所から練習">▶</button>
                 <button class="remove-step">×</button>
             </div>
 
