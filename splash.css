@@ -1,0 +1,277 @@
+/* FUI Splash - ガンダム／軍事オペレーション風 */
+@font-face {
+    font-family: 'GAU Root';
+    src: url('font/GAU_Root_Nomal.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --fui-bg: #030508;
+    --fui-accent: #00ff88;
+    --fui-accent-rgba: rgba(0, 255, 136, 0.9);
+    --fui-accent-dim: rgba(0, 255, 136, 0.3);
+    --fui-grid-line: rgba(0, 255, 136, 0.04);
+    --fui-scanline: rgba(0, 255, 136, 0.05);
+}
+
+/* 英字のみ GAU Root（スプラッシュ内の英語テキスト用） */
+.fui-font-en {
+    font-family: 'GAU Root', 'Share Tech Mono', 'Consolas', monospace;
+}
+
+.fui-sub-jp {
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* Splash コンテナ */
+.fui-splash {
+    position: fixed;
+    inset: 0;
+    top: env(safe-area-inset-top);
+    right: env(safe-area-inset-right);
+    bottom: env(safe-area-inset-bottom);
+    left: env(safe-area-inset-left);
+    z-index: 10000;
+    background: var(--fui-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+
+.fui-splash.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* スキャンライン */
+.fui-scanline {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        var(--fui-scanline) 2px,
+        var(--fui-scanline) 4px
+    );
+    animation: fui-scanline-move 0.12s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes fui-scanline-move {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+}
+
+/* グリッド */
+.fui-grid {
+    position: absolute;
+    inset: 12%;
+    background-image:
+        linear-gradient(var(--fui-grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--fui-grid-line) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+}
+
+/* ビネット */
+.fui-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(3, 5, 8, 0.6) 100%);
+    pointer-events: none;
+}
+
+/* 四隅 L 字フレーム */
+.fui-frame {
+    position: absolute;
+    inset: 12%;
+    pointer-events: none;
+}
+
+.fui-corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: var(--fui-accent-dim);
+    border-style: solid;
+    border-width: 0;
+}
+
+.fui-corner-tl {
+    top: 0;
+    left: 0;
+    border-top-width: 2px;
+    border-left-width: 2px;
+}
+
+.fui-corner-tr {
+    top: 0;
+    right: 0;
+    border-top-width: 2px;
+    border-right-width: 2px;
+}
+
+.fui-corner-bl {
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+}
+
+.fui-corner-br {
+    bottom: 0;
+    right: 0;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+}
+
+/* 中央コンテンツ */
+.fui-center {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 20px;
+    max-width: 90%;
+}
+
+/* フェーズ共通 */
+.fui-phase {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.fui-phase.active {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Phase 1: Welcome */
+.fui-welcome {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    color: var(--fui-accent);
+    letter-spacing: 0.2em;
+    animation: fui-blink 1s ease-in-out;
+}
+
+@keyframes fui-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.15; }
+}
+
+/* Phase 2: Typewriter */
+.fui-typewriter-wrap {
+    font-size: clamp(0.7rem, 2.5vw, 1rem);
+    color: var(--fui-accent);
+    line-height: 1.6;
+    max-width:  min(90vw, 520px);
+    text-align: left;
+    display: inline-block;
+}
+
+.fui-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--fui-accent);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: fui-cursor-blink 0.6s step-end infinite;
+}
+
+.fui-phase:not(.active) .fui-cursor {
+    display: none;
+}
+
+@keyframes fui-cursor-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Phase 3: Acronym */
+.fui-acronym-phase {
+    position: relative;
+}
+
+.fui-acronym-lower,
+.fui-acronym-upper {
+    font-size: clamp(1.2rem, 5vw, 2.2rem);
+    color: var(--fui-accent);
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 20px var(--fui-accent-dim);
+}
+
+.fui-acronym-upper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.fui-acronym-phase.fade-done .fui-acronym-lower {
+    opacity: 0;
+}
+
+.fui-acronym-phase.fade-done .fui-acronym-upper {
+    opacity: 1;
+}
+
+/* Phase 4: Final */
+#fui-phase-final .fui-sub,
+#fui-phase-final .fui-desc {
+    font-size: clamp(0.75rem, 2.5vw, 1rem);
+    color: var(--fui-accent-dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+}
+
+#fui-phase-final .fui-line {
+    width: 40px;
+    height: 1px;
+    background: var(--fui-accent-dim);
+    margin: 12px auto;
+}
+
+#fui-phase-final .fui-acronym {
+    font-size: clamp(1.2rem, 5vw, 2rem);
+    color: var(--fui-accent);
+    letter-spacing: 0.12em;
+    margin: 8px 0;
+    text-shadow: 0 0 24px var(--fui-accent-dim);
+    animation: fui-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes fui-glow {
+    0%, 100% { opacity: 1; text-shadow: 0 0 24px var(--fui-accent-dim); }
+    50% { opacity: 0.9; text-shadow: 0 0 32px var(--fui-accent-rgba); }
+}
+
+.fui-tap {
+    margin-top: 28px;
+    font-size: clamp(0.7rem, 2.5vw, 0.95rem);
+    color: var(--fui-accent);
+    letter-spacing: 0.25em;
+    opacity: 0.9;
+    animation: fui-tap-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes fui-tap-pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}

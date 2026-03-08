@@ -312,6 +312,9 @@ class Metronome {
             this.loadStep(0);
             const status = document.getElementById('seq-status');
             if (status) status.style.display = 'block';
+            const overlay = document.getElementById('seq-progress-overlay');
+            if (overlay) overlay.classList.remove('hidden');
+            this.updateSeqProgressDisplay();
         } else {
             if (this.precountBars > 0) {
                 this.barsPlayedInCurrentStep = -this.precountBars;
@@ -333,6 +336,8 @@ class Metronome {
         clearInterval(this.timerID);
         const status = document.getElementById('seq-status');
         if (status) status.style.display = 'none';
+        const overlay = document.getElementById('seq-progress-overlay');
+        if (overlay) overlay.classList.add('hidden');
         this.ui.beatCounter.textContent = '1';
         this.ui.beatCounter.classList.remove('active');
     }
@@ -411,7 +416,39 @@ class Metronome {
     }
 
     updateSequenceState() {
-        document.getElementById('seq-current-bar').textContent = this.barsPlayedInCurrentStep + 1;
+        const bar = this.barsPlayedInCurrentStep + 1;
+        const curEl = document.getElementById('seq-current-bar');
+        if (curEl) curEl.textContent = bar;
+        this.updateSeqProgressDisplay();
+    }
+
+    updateSeqProgressDisplay() {
+        const visStep = document.getElementById('seq-vis-step');
+        const visTotalSteps = document.getElementById('seq-vis-total-steps');
+        const visBar = document.getElementById('seq-vis-bar');
+        const visTotalBars = document.getElementById('seq-vis-total-bars');
+        const progressBar = document.getElementById('seq-progress-bar');
+        if (!visStep || !visBar) return;
+
+        visStep.textContent = this.currentSequenceStepIndex + 1;
+        visTotalSteps.textContent = this.sequence.length;
+
+        if (this.isFermata) {
+            visBar.textContent = '-';
+            if (visTotalBars) visTotalBars.textContent = '-';
+            if (progressBar) progressBar.style.width = '0%';
+            return;
+        }
+
+        const curBar = this.barsPlayedInCurrentStep + 1;
+        const total = this.totalBarsInCurrentStep;
+        visBar.textContent = curBar;
+        if (visTotalBars) visTotalBars.textContent = total;
+
+        if (progressBar && total > 0) {
+            const pct = Math.min(100, (curBar / total) * 100);
+            progressBar.style.width = pct + '%';
+        }
     }
 
     loadStep(index) {
@@ -421,9 +458,13 @@ class Metronome {
         if (step.type === 'fermata') {
             this.isFermata = true;
             this.fermataEndTime = this.audioContext.currentTime + (step.duration || 2.0);
-            document.getElementById('seq-current-step').textContent = index + 1 + " (Fermata)";
-            document.getElementById('seq-current-bar').textContent = "-";
-            document.getElementById('seq-total-bars').textContent = "-";
+            const stepEl = document.getElementById('seq-current-step');
+            const curEl = document.getElementById('seq-current-bar');
+            const totalEl = document.getElementById('seq-total-bars');
+            if (stepEl) stepEl.textContent = index + 1 + " (Fermata)";
+            if (curEl) curEl.textContent = "-";
+            if (totalEl) totalEl.textContent = "-";
+            this.updateSeqProgressDisplay();
             return;
         }
 
@@ -436,9 +477,13 @@ class Metronome {
         this.barsPlayedInCurrentStep = 0;
 
         if (this.ui.bpmDisplay) this.ui.bpmDisplay.textContent = Math.round(this.tempo);
-        document.getElementById('seq-current-bar').textContent = 1;
-        document.getElementById('seq-total-bars').textContent = step.bars;
-        document.getElementById('seq-current-step').textContent = index + 1;
+        const curEl = document.getElementById('seq-current-bar');
+        const totalEl = document.getElementById('seq-total-bars');
+        const stepEl = document.getElementById('seq-current-step');
+        if (curEl) curEl.textContent = 1;
+        if (totalEl) totalEl.textContent = step.bars;
+        if (stepEl) stepEl.textContent = index + 1;
+        this.updateSeqProgressDisplay();
     }
 
     scheduleNote(beatNumber, time) {

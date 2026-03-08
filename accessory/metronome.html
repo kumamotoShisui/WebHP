@@ -3,15 +3,54 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Metronome Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+JP:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="metronome.css">
+    <link rel="stylesheet" href="../splash.css">
 </head>
 
 <body>
+    <!-- FUI Splash (tap to close) - metronome 起動時のみ -->
+    <div id="fui-splash" class="fui-splash" role="button" aria-label="スプラッシュを閉じる" tabindex="0">
+        <div class="fui-scanline"></div>
+        <div class="fui-grid"></div>
+        <div class="fui-vignette"></div>
+        <div class="fui-frame">
+            <span class="fui-corner fui-corner-tl"></span>
+            <span class="fui-corner fui-corner-tr"></span>
+            <span class="fui-corner fui-corner-bl"></span>
+            <span class="fui-corner fui-corner-br"></span>
+        </div>
+        <div class="fui-center">
+            <div class="fui-phase active" id="fui-phase-welcome">
+                <div class="fui-welcome fui-font-en">Welcome to</div>
+            </div>
+            <div class="fui-phase" id="fui-phase-typewriter">
+                <div class="fui-typewriter-wrap fui-font-en">
+                    <span id="fui-typed-text"></span>
+                    <span class="fui-cursor" id="fui-cursor"></span>
+                </div>
+            </div>
+            <div class="fui-phase" id="fui-phase-acronym">
+                <div class="fui-acronym-phase" id="fui-acronym-box">
+                    <div class="fui-acronym-lower fui-font-en">kumamoto simin music</div>
+                    <div class="fui-acronym-upper fui-font-en">KUMAMOTO SIMIN MUSIC</div>
+                </div>
+            </div>
+            <div class="fui-phase" id="fui-phase-final">
+                <div class="fui-sub fui-sub-jp">熊本市民吹奏楽団</div>
+                <div class="fui-line"></div>
+                <div class="fui-acronym fui-font-en">KUMAMOTO SIMIN MUSIC</div>
+                <div class="fui-line"></div>
+                <div class="fui-desc fui-font-en">Kumamoto City Wind Orchestra</div>
+                <div class="fui-tap fui-font-en">TAP TO START</div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-background"></div>
     <div class="glass-container">
         <header>
@@ -235,6 +274,7 @@
         </div>
     </template>
 
+    <script src="../splash.js"></script>
     <script src="metronome.js"></script>
 </body>
 
