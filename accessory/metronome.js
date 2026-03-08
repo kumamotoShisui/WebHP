@@ -19,6 +19,14 @@ class Metronome {
         this.precountBars = 0;
         this.volume = 1.0;
 
+        // Tempo multiplier (倍テンポ): 0.5, 1, 2
+        this.tempoMultiplier = 1;
+
+        // Sound customization
+        this.soundWave = 'triangle';
+        this.soundFreqDownbeat = 1200;
+        this.soundFreqBeat = 800;
+
         // Sequence Mode
         this.mode = 'simple';
         this.sequence = [];
@@ -132,6 +140,36 @@ class Metronome {
             });
         }
 
+        // Tempo multiplier (倍テンポ)
+        document.querySelectorAll('.tempo-mult-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mult = parseFloat(btn.dataset.mult);
+                this.tempoMultiplier = mult;
+                document.querySelectorAll('.tempo-mult-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.updateTempoMultLabel();
+            });
+        });
+        this.updateTempoMultLabel();
+
+        // Sound customization
+        const soundPreset = document.getElementById('sound-preset');
+        const soundWave = document.getElementById('sound-wave');
+        const soundFreqDownbeat = document.getElementById('sound-freq-downbeat');
+        const soundFreqBeat = document.getElementById('sound-freq-beat');
+        if (soundPreset) {
+            soundPreset.addEventListener('change', (e) => this.applySoundPreset(e.target.value));
+        }
+        if (soundWave) {
+            soundWave.addEventListener('change', (e) => { this.soundWave = e.target.value; });
+        }
+        if (soundFreqDownbeat) {
+            soundFreqDownbeat.addEventListener('input', (e) => { this.soundFreqDownbeat = parseInt(e.target.value) || 800; });
+        }
+        if (soundFreqBeat) {
+            soundFreqBeat.addEventListener('input', (e) => { this.soundFreqBeat = parseInt(e.target.value) || 600; });
+        }
+
         // Mode Switching
         if (this.ui.modeBtns.simple) {
             this.ui.modeBtns.simple.addEventListener('click', () => this.setMode('simple'));
@@ -173,6 +211,20 @@ class Metronome {
         this.masterGainNode.connect(this.audioContext.destination);
     }
 
+    getEffectiveTempo() {
+        return this.tempo * this.tempoMultiplier;
+    }
+
+    updateTempoMultLabel() {
+        const el = document.getElementById('tempo-mult-label');
+        if (!el) return;
+        if (this.tempoMultiplier === 1) {
+            el.textContent = '';
+        } else {
+            el.textContent = this.tempoMultiplier === 2 ? '×2' : '×0.5';
+        }
+    }
+
     changeTempo(val) {
         let newTempo = parseInt(val);
         if (newTempo < 30) newTempo = 30;
@@ -181,6 +233,25 @@ class Metronome {
         this.tempo = newTempo;
         if (this.ui.bpmDisplay) this.ui.bpmDisplay.textContent = this.tempo;
         if (this.ui.bpmSlider) this.ui.bpmSlider.value = this.tempo;
+    }
+
+    applySoundPreset(preset) {
+        const waveEl = document.getElementById('sound-wave');
+        const downEl = document.getElementById('sound-freq-downbeat');
+        const beatEl = document.getElementById('sound-freq-beat');
+        const presets = {
+            default: { wave: 'triangle', downbeat: 1200, beat: 800 },
+            soft: { wave: 'sine', downbeat: 900, beat: 600 },
+            bright: { wave: 'square', downbeat: 1000, beat: 700 },
+            low: { wave: 'triangle', downbeat: 600, beat: 400 }
+        };
+        const p = presets[preset] || presets.default;
+        this.soundWave = p.wave;
+        this.soundFreqDownbeat = p.downbeat;
+        this.soundFreqBeat = p.beat;
+        if (waveEl) waveEl.value = p.wave;
+        if (downEl) downEl.value = p.downbeat;
+        if (beatEl) beatEl.value = p.beat;
     }
 
     setTimeSignature(val) {
@@ -296,7 +367,8 @@ class Metronome {
             }
         }
 
-        const secondsPerBeat = 60.0 / currentInstantTempo;
+        const effectiveTempo = currentInstantTempo * this.tempoMultiplier;
+        const secondsPerBeat = 60.0 / effectiveTempo;
         this.nextNoteTime += 0.25 * secondsPerBeat;
 
         this.current16thNote++;
@@ -383,11 +455,10 @@ class Metronome {
             osc.connect(gainNode);
             if (this.masterGainNode) gainNode.connect(this.masterGainNode);
 
-            // Triangle wave cuts through better than sine
-            osc.type = 'triangle';
+            osc.type = this.soundWave;
 
             let isAccented = (beatIndex === 0);
-            let freq = 800;
+            let freq = this.soundFreqBeat;
 
             if (this.grouping.length > 0) {
                 // Custom Grouping Logic
@@ -403,28 +474,25 @@ class Metronome {
 
                 if (groupIndex !== -1) {
                     isAccented = true;
-                    if (beatIndex === 0) freq = 1200;
-                    else freq = 1000;
+                    freq = (beatIndex === 0) ? this.soundFreqDownbeat : Math.min(this.soundFreqDownbeat, this.soundFreqBeat + 200);
                 }
             } else {
                 // Standard Logic
                 if (this.timeSignature[0] === 6 && this.timeSignature[1] === 8) {
                     if (beatIndex === 3) isAccented = true;
-                    if (beatIndex === 0) freq = 1200;
-                    else if (beatIndex === 3) freq = 1000;
+                    freq = (beatIndex === 0) ? this.soundFreqDownbeat : (beatIndex === 3 ? Math.min(this.soundFreqDownbeat, this.soundFreqBeat + 200) : this.soundFreqBeat);
                 } else if (this.timeSignature[0] === 5 && this.timeSignature[1] === 8) {
-                    if (beatIndex === 0) freq = 1200;
-                    else if (beatIndex === 3) freq = 1000;
+                    freq = (beatIndex === 0) ? this.soundFreqDownbeat : (beatIndex === 3 ? Math.min(this.soundFreqDownbeat, this.soundFreqBeat + 200) : this.soundFreqBeat);
                 } else if (this.timeSignature[0] === 1 && this.timeSignature[1] === 4) {
                     isAccented = true;
-                    freq = 1200;
+                    freq = this.soundFreqDownbeat;
                 } else {
-                    if (isAccented) freq = 1200;
+                    freq = isAccented ? this.soundFreqDownbeat : this.soundFreqBeat;
                 }
             }
 
             if (this.barsPlayedInCurrentStep < 0) {
-                freq = 600;
+                freq = Math.min(600, this.soundFreqBeat);
             }
 
             osc.frequency.value = freq;
@@ -460,7 +528,7 @@ class Metronome {
         const h = 200;
         this.ctx.clearRect(0, 0, w, h);
 
-        const secondsPerBeat = 60.0 / this.tempo;
+        const secondsPerBeat = 60.0 / this.getEffectiveTempo();
         let timeToNextBeat = this.nextNoteTime - this.audioContext.currentTime;
         let p = 1 - (timeToNextBeat / secondsPerBeat);
         if (p < 0) p = 0; if (p > 1) p = 1;

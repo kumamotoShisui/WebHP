@@ -28,6 +28,16 @@
                 <div class="beat-indicator" id="beat-visual"></div>
                 <div class="beat-counter" id="beat-counter">1</div>
                 <canvas id="conductor-canvas" width="300" height="200"></canvas>
+                <!-- Sequence Mode: Bar Progress (visible when playing) -->
+                <div class="seq-progress-overlay hidden" id="seq-progress-overlay">
+                    <div class="seq-progress-info">
+                        <span class="seq-step-label">Step <span id="seq-vis-step">1</span> / <span id="seq-vis-total-steps">1</span></span>
+                        <span class="seq-bar-label">小節 <span id="seq-vis-bar">1</span> / <span id="seq-vis-total-bars">4</span></span>
+                    </div>
+                    <div class="seq-progress-bar-wrap">
+                        <div class="seq-progress-bar" id="seq-progress-bar"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- Main Controls (Simple Mode) -->
@@ -43,11 +53,21 @@
                     <div class="tempo-value">
                         <span id="bpm-display">120</span>
                         <span class="bpm-label">BPM</span>
+                        <span class="tempo-mult-label" id="tempo-mult-label"></span>
                     </div>
                     <button class="tempo-adjust" id="tempo-plus">+</button>
                 </div>
 
                 <input type="range" id="bpm-slider" min="30" max="300" value="120">
+
+                <div class="tempo-mult-row">
+                    <label>倍テンポ</label>
+                    <div class="tempo-mult-btns">
+                        <button type="button" class="tempo-mult-btn" data-mult="0.5">1/2×</button>
+                        <button type="button" class="tempo-mult-btn active" data-mult="1">1×</button>
+                        <button type="button" class="tempo-mult-btn" data-mult="2">2×</button>
+                    </div>
+                </div>
 
                 <div class="settings-grid">
                     <div class="setting-item">
@@ -83,6 +103,38 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="sound-section">
+                    <label class="sound-section-label">音のカスタマイズ</label>
+                    <div class="sound-preset-row">
+                        <label>音色</label>
+                        <select id="sound-preset">
+                            <option value="default">デフォルト</option>
+                            <option value="soft">ソフト</option>
+                            <option value="bright">明るい</option>
+                            <option value="low">低め</option>
+                        </select>
+                    </div>
+                    <div class="sound-detail-row">
+                        <div class="sound-detail-item">
+                            <label>波形</label>
+                            <select id="sound-wave">
+                                <option value="triangle">三角波</option>
+                                <option value="sine">サイン波</option>
+                                <option value="square">矩形波</option>
+                                <option value="sawtooth">のこぎり波</option>
+                            </select>
+                        </div>
+                        <div class="sound-detail-item">
+                            <label>強拍 (Hz)</label>
+                            <input type="number" id="sound-freq-downbeat" min="200" max="2000" value="1200" class="small-input">
+                        </div>
+                        <div class="sound-detail-item">
+                            <label>弱拍 (Hz)</label>
+                            <input type="number" id="sound-freq-beat" min="200" max="2000" value="800" class="small-input">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Sequence Editor (Sequence Mode) -->
@@ -108,8 +160,8 @@
                 </div>
 
                 <div class="current-step-display" id="seq-status" style="display:none;">
-                    Playing: Step <span id="seq-current-step">1</span> (<span id="seq-current-bar">1</span>/<span
-                        id="seq-total-bars">4</span>)
+                    Step <span id="seq-current-step">1</span> · 小節 <span id="seq-current-bar">1</span>/<span
+                        id="seq-total-bars">4</span>
                 </div>
             </div>
 

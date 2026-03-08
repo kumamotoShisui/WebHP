@@ -246,6 +246,54 @@ header h1 {
     transform: translateY(-2px);
 }
 
+.tempo-mult-label {
+    font-size: 0.75rem;
+    color: var(--accent-color);
+    margin-left: 4px;
+}
+
+.tempo-mult-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tempo-mult-row label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    width: 56px;
+}
+
+.tempo-mult-btns {
+    display: flex;
+    gap: 6px;
+}
+
+.tempo-mult-btn {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.tempo-mult-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.tempo-mult-btn.active {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
 input[type=range] {
     -webkit-appearance: none;
     appearance: none;
@@ -340,6 +388,66 @@ select option {
     color: var(--text-secondary);
 }
 
+/* Sound Section */
+.sound-section {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sound-section-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.sound-preset-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sound-preset-row label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    width: 36px;
+}
+
+.sound-preset-row select {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 10px;
+    border-radius: 8px;
+}
+
+.sound-detail-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.sound-detail-item label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.sound-detail-item select,
+.sound-detail-item input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
 
 /* Template Row */
 .template-row {
@@ -613,6 +721,10 @@ select option {
 
     .setting-item.full-width {
         grid-column: span 1;
+    }
+
+    .sound-detail-row {
+        grid-template-columns: 1fr;
     }
 
     /* Sequence Editor Mobile */
