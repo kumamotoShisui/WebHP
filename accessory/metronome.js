@@ -47,6 +47,8 @@ class Metronome {
                 name: 'templateA',
                 tempoRef: '2分音符=76~90',
                 steps: [
+                    // アウフタクト（0小節）2/2で1小節
+                    { type: 'normal', signature: '2/2', bars: 1, bpmStart: 76, bpmEnd: 90, practiceNo: '0' },
                     // A: 小節1-14（5,8小節が3/4、他は2/2）
                     { type: 'normal', signature: '2/2', bars: 4, bpmStart: 76, bpmEnd: 90, practiceNo: 'A' },   // 1-4
                     { type: 'normal', signature: '3/4', bars: 1, bpmStart: 76, bpmEnd: 90, practiceNo: 'A' },   // 5
@@ -82,6 +84,37 @@ class Metronome {
                     { type: 'normal', signature: '2/2', bars: 6, bpmStart: 76, bpmEnd: 90, practiceNo: 'L' },   // 132-137
                     // M: 138-146 すべて2/2（最終小節146）
                     { type: 'normal', signature: '2/2', bars: 9, bpmStart: 76, bpmEnd: 90, practiceNo: 'M' }    // 138-146
+                ]
+            },
+            templateB: {
+                name: 'templateB',
+                tempoRef: '4分音符=84',
+                steps: [
+                    // 導入 4小節
+                    { type: 'normal', signature: '4/4', bars: 4, bpmStart: 84, bpmEnd: 84, practiceNo: '' },
+                    // A: 1-10小節 10小節
+                    { type: 'normal', signature: '4/4', bars: 10, bpmStart: 84, bpmEnd: 84, practiceNo: 'A' },
+                    // B: 15-23小節 9小節、最後rit
+                    { type: 'normal', signature: '4/4', bars: 8, bpmStart: 84, bpmEnd: 84, practiceNo: 'B' },
+                    { type: 'normal', signature: '4/4', bars: 1, bpmStart: 84, bpmEnd: 60, practiceNo: 'B' },   // 23小節 rit
+                    // C: 24-31小節 Doloroso atempo 8小節
+                    { type: 'normal', signature: '4/4', bars: 8, bpmStart: 84, bpmEnd: 84, practiceNo: 'C' },
+                    // D: 32-39小節 8小節、39小節 poco rit
+                    { type: 'normal', signature: '4/4', bars: 7, bpmStart: 84, bpmEnd: 84, practiceNo: 'D' },
+                    { type: 'normal', signature: '4/4', bars: 1, bpmStart: 84, bpmEnd: 65, practiceNo: 'D' },   // 39小節 poco rit
+                    // E: 40-52小節 40-43 accel、44-51 126、52 rit
+                    { type: 'normal', signature: '4/4', bars: 4, bpmStart: 84, bpmEnd: 126, practiceNo: 'E' },  // 40-43 accel
+                    { type: 'normal', signature: '4/4', bars: 8, bpmStart: 126, bpmEnd: 126, practiceNo: 'E' }, // 44-51
+                    { type: 'normal', signature: '4/4', bars: 1, bpmStart: 126, bpmEnd: 80, practiceNo: 'E' },  // 52 rit
+                    // F: 53-60小節 8小節 84
+                    { type: 'normal', signature: '4/4', bars: 8, bpmStart: 84, bpmEnd: 84, practiceNo: 'F' },
+                    // G: 61-70小節 10小節、70 rit
+                    { type: 'normal', signature: '4/4', bars: 9, bpmStart: 84, bpmEnd: 84, practiceNo: 'G' },
+                    { type: 'normal', signature: '4/4', bars: 1, bpmStart: 84, bpmEnd: 60, practiceNo: 'G' },   // 70 rit
+                    // H: 71-82小節 71-77 112、78 molto rit、79-82 Tranquillo 84
+                    { type: 'normal', signature: '4/4', bars: 7, bpmStart: 112, bpmEnd: 112, practiceNo: 'H' }, // 71-77
+                    { type: 'fermata', duration: 2.0, practiceNo: 'H' },   // 78 molto rit riten
+                    { type: 'normal', signature: '4/4', bars: 4, bpmStart: 84, bpmEnd: 84, practiceNo: 'H' }    // 79-82 Tranquillo
                 ]
             }
         };
