@@ -19,7 +19,7 @@ class Metronome {
         this.precountBars = 0;
         this.volume = 1.0;
 
-        // Tempo multiplier (倍テンポ): 0.5, 1, 2
+        // 倍テンポ: 1拍あたりのクリック数（0.5=2拍に1回、1=1拍1回、2=八分で2回）。BPMは変えず音の密度だけ変更
         this.tempoMultiplier = 1;
 
         // Sound customization
@@ -233,9 +233,12 @@ class Metronome {
         const loadTemplateBtn = document.getElementById('load-template-btn');
         const templateSelect = document.getElementById('template-select');
         if (loadTemplateBtn && templateSelect) {
-            loadTemplateBtn.addEventListener('click', () => {
-                const id = templateSelect.value;
-                if (id) this.loadTemplate(id);
+            loadTemplateBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = templateSelect.value || (templateSelect.selectedIndex >= 0 && templateSelect.options[templateSelect.selectedIndex]?.value);
+                if (id && this.templates[id]) {
+                    this.loadTemplate(id);
+                }
             });
         }
 
@@ -261,9 +264,7 @@ class Metronome {
         this.masterGainNode.connect(this.audioContext.destination);
     }
 
-    getEffectiveTempo() {
-        return this.tempo * this.tempoMultiplier;
-    }
+    // 倍テンポはBPMを変えず「1拍あたりのクリック数」のみ。表示・タイミングは常に実BPM
 
     updateTempoMultLabel() {
         const el = document.getElementById('tempo-mult-label');
@@ -441,12 +442,11 @@ class Metronome {
 
             currentInstantTempo = this.stepStartTempo + (this.stepEndTempo - this.stepStartTempo) * p;
             if (this.current16thNote === 0 && this.ui.bpmDisplay) {
-                this.ui.bpmDisplay.textContent = Math.round(currentInstantTempo * this.tempoMultiplier);
+                this.ui.bpmDisplay.textContent = Math.round(currentInstantTempo);
             }
         }
 
-        const effectiveTempo = currentInstantTempo * this.tempoMultiplier;
-        const secondsPerBeat = 60.0 / effectiveTempo;
+        const secondsPerBeat = 60.0 / currentInstantTempo;
         this.nextNoteTime += 0.25 * secondsPerBeat;
 
         this.current16thNote++;
@@ -575,7 +575,7 @@ class Metronome {
         this.totalBarsInCurrentStep = step.bars;
         this.barsPlayedInCurrentStep = 0;
 
-        if (this.ui.bpmDisplay) this.ui.bpmDisplay.textContent = Math.round(this.tempo * this.tempoMultiplier);
+        if (this.ui.bpmDisplay) this.ui.bpmDisplay.textContent = Math.round(this.tempo);
         const stepEl = document.getElementById('seq-current-step');
         if (stepEl) stepEl.textContent = index + 1;
         const curPractice = document.getElementById('seq-current-practice');
@@ -585,9 +585,11 @@ class Metronome {
 
     scheduleNote(beatNumber, time) {
         const sixteenthsPerBeat = 16 / this.timeSignature[1];
+        const clickEvery = sixteenthsPerBeat / this.tempoMultiplier;
 
-        if (beatNumber % sixteenthsPerBeat === 0) {
-            const beatIndex = beatNumber / sixteenthsPerBeat;
+        if (clickEvery > 0 && beatNumber % clickEvery === 0) {
+            const beatIndex = beatNumber / clickEvery;
+            const beatInMeasure = Math.floor(beatIndex / this.tempoMultiplier);
 
             this.notesInQueue.push({ note: beatIndex, time: time });
 
@@ -599,15 +601,17 @@ class Metronome {
 
             osc.type = this.soundWave;
 
-            let isAccented = (beatIndex === 0);
+            const isFirstClickOfBeat = (this.tempoMultiplier >= 2)
+                ? (beatIndex % Math.round(this.tempoMultiplier) === 0)
+                : true;
+            let isAccented = (beatInMeasure === 0) && isFirstClickOfBeat;
             let freq = this.soundFreqBeat;
 
             if (this.grouping.length > 0) {
-                // Custom Grouping Logic
                 let sum = 0;
                 let groupIndex = -1;
                 for (let i = 0; i < this.grouping.length; i++) {
-                    if (beatIndex === sum) {
+                    if (beatInMeasure === sum) {
                         groupIndex = i;
                         break;
                     }
@@ -615,16 +619,15 @@ class Metronome {
                 }
 
                 if (groupIndex !== -1) {
-                    isAccented = true;
-                    freq = (beatIndex === 0) ? this.soundFreqDownbeat : Math.min(this.soundFreqDownbeat, this.soundFreqBeat + 200);
+                    isAccented = isFirstClickOfBeat;
+                    freq = (beatInMeasure === 0 && isFirstClickOfBeat) ? this.soundFreqDownbeat : Math.min(this.soundFreqDownbeat, this.soundFreqBeat + 200);
                 }
             } else {
-                // Standard Logic
                 if (this.timeSignature[0] === 6 && this.timeSignature[1] === 8) {
-                    if (beatIndex === 3) isAccented = true;
-                    freq = (beatIndex === 0) ? this.soundFreqDownbeat : (beatIndex === 3 ? Math.min(this.soundFreqDownbeat, this.soundFreqBeat + 200) : this.soundFreqBeat);
+                    if (beatInMeasure === 3) isAccented = isFirstClickOfBeat;
+                    freq = (beatInMeasure === 0 && isFirstClickOfBeat) ? this.soundFreqDownbeat : (beatInMeasure === 3 ? Math.min(this.soundFreqDownbeat, this.soundFreqBeat + 200) : this.soundFreqBeat);
                 } else if (this.timeSignature[0] === 5 && this.timeSignature[1] === 8) {
-                    freq = (beatIndex === 0) ? this.soundFreqDownbeat : (beatIndex === 3 ? Math.min(this.soundFreqDownbeat, this.soundFreqBeat + 200) : this.soundFreqBeat);
+                    freq = (beatInMeasure === 0 && isFirstClickOfBeat) ? this.soundFreqDownbeat : (beatInMeasure === 3 ? Math.min(this.soundFreqDownbeat, this.soundFreqBeat + 200) : this.soundFreqBeat);
                 } else if (this.timeSignature[0] === 1 && this.timeSignature[1] === 4) {
                     isAccented = true;
                     freq = this.soundFreqDownbeat;
@@ -670,7 +673,7 @@ class Metronome {
         const h = 200;
         this.ctx.clearRect(0, 0, w, h);
 
-        const secondsPerBeat = 60.0 / this.getEffectiveTempo();
+        const secondsPerBeat = 60.0 / this.tempo;
         let timeToNextBeat = this.nextNoteTime - this.audioContext.currentTime;
         let p = 1 - (timeToNextBeat / secondsPerBeat);
         if (p < 0) p = 0; if (p > 1) p = 1;
