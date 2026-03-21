@@ -115,18 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
         setupRecaptchaContactForm(contactOtherForm);
     }
 
-    // Random Image for About Us
-    const aboutImage = document.getElementById('aboutImage');
-    if (aboutImage) {
-        const images = [
-            'images/rensyu/S__33079304.jpg',
-            'images/rensyu/S__33079305.jpg',
-            'images/rensyu/S__33079306.jpg'
-        ];
-        const randomImage = images[Math.floor(Math.random() * images.length)];
-        aboutImage.src = randomImage;
-    }
-
     // Musical Note Effect
     const createNote = (x, y) => {
         const note = document.createElement('span');
