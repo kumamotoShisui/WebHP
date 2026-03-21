@@ -115,6 +115,35 @@ document.addEventListener('DOMContentLoaded', function () {
         setupRecaptchaContactForm(contactOtherForm);
     }
 
+    // 楽団紹介：練習風景カルーセル（PC の2カラム内で CSS の % 幅が効かず縦積みになる対策）
+    (function initPracticeCarousel() {
+        const el = document.getElementById('practiceCarousel');
+        if (!el) return;
+
+        function applySlideWidth() {
+            const w = el.clientWidth;
+            if (w < 1) return;
+            el.style.setProperty('--slide-w', Math.round(w) + 'px');
+        }
+
+        applySlideWidth();
+        requestAnimationFrame(function () {
+            applySlideWidth();
+            requestAnimationFrame(applySlideWidth);
+        });
+
+        window.addEventListener('resize', applySlideWidth);
+
+        if (typeof ResizeObserver !== 'undefined') {
+            const ro = new ResizeObserver(applySlideWidth);
+            ro.observe(el);
+            const about = el.closest('.about-content');
+            if (about) {
+                ro.observe(about);
+            }
+        }
+    })();
+
     // Musical Note Effect
     const createNote = (x, y) => {
         const note = document.createElement('span');

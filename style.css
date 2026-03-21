@@ -518,12 +518,12 @@ img {
 }
 
 .practice-scroll {
-    /* Flex の 100% 基準が PC のグリッド列で崩れ縦積みになるのを避け、横スナップカルーセルにする */
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 100%;
-    grid-auto-rows: auto;
-    align-items: start;
+    /* 幅は script.js が --slide-w に px で設定（PC のグリッド列内で % が崩れるのを回避） */
+    --slide-w: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
     gap: 0;
     width: 100%;
     max-width: 100%;
@@ -556,9 +556,10 @@ img {
 }
 
 .practice-scroll-item {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
+    flex: 0 0 var(--slide-w);
+    width: var(--slide-w);
+    min-width: var(--slide-w);
+    max-width: var(--slide-w);
     box-sizing: border-box;
     scroll-snap-align: start;
     scroll-snap-stop: always;
@@ -580,10 +581,6 @@ img {
 @media (min-width: 993px) {
     .practice-scroll-item img {
         max-height: min(560px, 72vh);
-        width: auto;
-        max-width: 100%;
-        margin-left: auto;
-        margin-right: auto;
         object-fit: contain;
     }
 }
