@@ -1,4 +1,4 @@
-﻿/* Global Styles & Variables */
+/* Global Styles & Variables */
 :root {
     --primary-color: #0f172a;
     /* Slate 900 - Deep Blue/Black */
@@ -766,10 +766,34 @@ img {
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
+}
+
+.contact-form-entry-title {
+    font-size: 1.35rem;
+    margin-bottom: 8px;
+    font-family: var(--font-serif);
+}
+
+.contact-form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.contact-form-actions .btn.w-full {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+.contact-page-form {
+    max-width: 640px;
+    margin: 0 auto;
 }
 
 /* Footer */

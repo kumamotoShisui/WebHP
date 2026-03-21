@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>その他のお問い合わせ | 熊本市民吹奏楽団</title>
+    <meta name="description" content="熊本市民吹奏楽団への演奏依頼やその他のお問い合わせフォームです。">
+    <link rel="icon" href="images/logo.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
+<body>
+    <header class="header" id="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.jpg" alt="熊本市民吹奏楽団ロゴ" class="logo-icon">
+                <div class="logo-text">
+                    <span class="logo-jp">熊本市民吹奏楽団</span>
+                    <span class="logo-en">Kumamoto simin music</span>
+                </div>
+            </a>
+            <nav class="nav-desktop">
+                <ul>
+                    <li><a href="index.html#home">ホーム</a></li>
+                    <li><a href="index.html#about">楽団について</a></li>
+                    <li><a href="index.html#conductor">指揮者</a></li>
+                    <li><a href="index.html#schedule">活動予定</a></li>
+                    <li><a href="Record.html">演奏記録</a></li>
+                    <li><a href="index.html#recruitment">団員募集</a></li>
+                    <li><a href="index.html#contact" class="btn-nav">お問い合わせ</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-btn" aria-label="メニューを開く">
+                <span class="hamburger"></span>
+            </button>
+        </div>
+        <nav class="nav-mobile">
+            <ul>
+                <li><a href="index.html#home">ホーム</a></li>
+                <li><a href="index.html#about">楽団について</a></li>
+                <li><a href="index.html#conductor">指揮者</a></li>
+                <li><a href="index.html#schedule">活動予定</a></li>
+                <li><a href="Record.html">演奏記録</a></li>
+                <li><a href="index.html#recruitment">団員募集</a></li>
+                <li><a href="index.html#contact">お問い合わせ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="section" style="padding-top: 120px;">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-subtitle">Contact</span>
+                <h1 class="section-title">その他のお問い合わせ</h1>
+                <div class="section-line"></div>
+            </div>
+
+            <p class="text-center" style="max-width: 640px; margin: 0 auto 28px; color: var(--text-light);">
+                演奏依頼や一般のご質問など、こちらのフォームをご利用ください。
+            </p>
+
+            <form id="contactOtherForm" class="contact-form contact-page-form">
+                <div class="form-group">
+                    <label for="otherName">お名前 <span style="color: red;">*</span></label>
+                    <input type="text" id="otherName" name="name" required placeholder="例：熊本 太郎" autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="otherEmail">メールアドレス <span style="color: red;">*</span></label>
+                    <input type="email" id="otherEmail" name="email" required placeholder="例：kumamoto@example.com"
+                        autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="otherMessage">本文 <span style="color: red;">*</span></label>
+                    <textarea id="otherMessage" name="message" rows="6" required
+                        placeholder="お問い合わせ内容をご記入ください"></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-full">送信する</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="index.html#contact" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left" style="margin-right: 10px;"></i>
+                    お問い合わせに戻る
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <h3>熊本市民吹奏楽団</h3>
+                <p>Kumamoto simin music</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html#home">ホーム</a>
+                <a href="index.html#about">楽団について</a>
+                <a href="index.html#schedule">活動予定</a>
+                <a href="Record.html">演奏記録</a>
+                <a href="index.html#recruitment">団員募集</a>
+                <a href="index.html#contact">お問い合わせ</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2026 Kumamoto simin music. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <div class="mascot" id="mascot">
+        <img src="image/Torisan.png" alt="とりさんマスコット" class="mascot-image">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
