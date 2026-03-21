@@ -4,6 +4,11 @@
 (function () {
     var NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
+    /** これ未満の RMS は無音扱い（環境ノイズの誤検出を減らす） */
+    var RMS_THRESHOLD = 0.024;
+    /** 自己相関のピークが弱いときは周期が曖昧なので無視 */
+    var CORR_RATIO_MIN = 0.12;
+
     var playBtn = document.getElementById('tune-mic-btn');
     var noteEl = document.getElementById('tune-note');
     var hzEl = document.getElementById('tune-hz');
@@ -46,11 +51,11 @@
         var maxLag = Math.min(Math.floor(sampleRate / minF), Math.floor(SIZE / 2) - 2);
         if (maxLag <= minLag) return -1;
 
-        var rms = 0;
+        var ac0 = 0;
         var i;
-        for (i = 0; i < SIZE; i++) rms += timeData[i] * timeData[i];
-        rms = Math.sqrt(rms / SIZE);
-        if (rms < 0.008) return -1;
+        for (i = 0; i < SIZE; i++) ac0 += timeData[i] * timeData[i];
+        var rms = Math.sqrt(ac0 / SIZE);
+        if (rms < RMS_THRESHOLD) return -1;
 
         var bestLag = -1;
         var bestCorr = 0;
@@ -65,6 +70,8 @@
             }
         }
         if (bestLag < minLag) return -1;
+
+        if (ac0 <= 0 || bestCorr / ac0 < CORR_RATIO_MIN) return -1;
 
         var f0 = sampleRate / bestLag;
         if (bestLag > minLag && bestLag < maxLag) {

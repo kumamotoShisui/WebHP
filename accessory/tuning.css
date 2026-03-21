@@ -12,17 +12,23 @@
     gap: 4px;
     z-index: 2;
     text-align: center;
+    width: 100%;
+    max-width: 320px;
 }
 
 .tune-note-name {
     font-size: 3.5rem;
     font-weight: 800;
-    font-family: 'GAU Root', 'Share Tech Mono', 'Consolas', monospace;
-    letter-spacing: 0.06em;
+    font-family: 'Share Tech Mono', 'Consolas', monospace;
+    letter-spacing: 0;
     color: var(--text-primary);
     text-shadow: var(--text-shadow-strong);
     line-height: 1;
     min-height: 1.1em;
+    /* C#4 / G#10 など # 付きでも幅が変わらないよう等幅で箱を固定 */
+    min-width: 6ch;
+    width: 6ch;
+    box-sizing: content-box;
 }
 
 .tune-note-name.dim {
@@ -31,25 +37,45 @@
 
 .tune-hz {
     font-size: 1.25rem;
+    font-family: 'Share Tech Mono', 'Consolas', monospace;
     font-variant-numeric: tabular-nums;
     color: var(--text-secondary);
     font-weight: 600;
     text-shadow: var(--text-shadow);
+    min-width: 12ch;
+    text-align: center;
 }
 
 .tune-meter-wrap {
     width: 100%;
     max-width: 280px;
     margin-top: 12px;
+    box-sizing: border-box;
 }
 
 .tune-meter-labels {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
     font-size: 0.7rem;
     color: var(--text-secondary);
     margin-bottom: 4px;
     font-weight: 600;
+    min-height: 1.2em;
+}
+
+.tune-meter-labels span:nth-child(1) {
+    text-align: center;
+    font-family: 'Share Tech Mono', 'Consolas', monospace;
+}
+
+.tune-meter-labels span:nth-child(2) {
+    text-align: center;
+}
+
+.tune-meter-labels span:nth-child(3) {
+    text-align: center;
+    font-family: 'Share Tech Mono', 'Consolas', monospace;
 }
 
 .tune-meter {
