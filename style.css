@@ -518,16 +518,19 @@ img {
 }
 
 .practice-scroll {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: stretch;
+    /* Flex の 100% 基準が PC のグリッド列で崩れ縦積みになるのを避け、横スナップカルーセルにする */
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    grid-auto-rows: auto;
+    align-items: start;
     gap: 0;
     width: 100%;
     max-width: 100%;
     min-width: 0;
     overflow-x: auto;
     overflow-y: hidden;
+    overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
@@ -553,10 +556,9 @@ img {
 }
 
 .practice-scroll-item {
-    flex: 0 0 100%;
-    min-width: 100%;
-    max-width: 100%;
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
     box-sizing: border-box;
     scroll-snap-align: start;
     scroll-snap-stop: always;
@@ -568,10 +570,22 @@ img {
 .practice-scroll-item img {
     width: 100%;
     height: auto;
+    max-width: 100%;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     display: block;
     transition: transform 0.35s ease;
+}
+
+@media (min-width: 993px) {
+    .practice-scroll-item img {
+        max-height: min(560px, 72vh);
+        width: auto;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        object-fit: contain;
+    }
 }
 
 .practice-scroll-item:hover img {
