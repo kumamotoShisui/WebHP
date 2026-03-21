@@ -485,9 +485,13 @@ img {
 /* About Section */
 .about-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 60px;
-    align-items: center;
+    align-items: start;
+}
+
+.about-text {
+    min-width: 0;
 }
 
 .lead-text {
@@ -499,12 +503,24 @@ img {
 
 .about-text p {
     margin-bottom: 20px;
-    color: var(--text-light);
+    color: var(--text-color);
+    line-height: 1.85;
+    font-size: 1.02rem;
 }
 
-.about-stats {}
+.about-text strong {
+    color: var(--primary-color);
+}
+
+.about-stats {
+    min-width: 0;
+    width: 100%;
+}
 
 .practice-scroll {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
@@ -526,16 +542,25 @@ img {
 
 .practice-scroll-track {
     display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
     gap: 16px;
     padding: 4px 4px 8px;
     scroll-snap-type: x mandatory;
+    width: max-content;
+    max-width: none;
 }
 
 .practice-scroll-item {
     flex: 0 0 auto;
-    width: min(82vw, 300px);
+    flex-shrink: 0;
+    width: 260px;
+    max-width: min(260px, calc(100vw - 40px));
     scroll-snap-align: start;
     margin: 0;
+    padding: 0;
+    border: none;
 }
 
 .practice-scroll-item img {
