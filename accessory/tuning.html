@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Tuner — KUMAMOTO SISUI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+JP:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="metronome.css">
+    <link rel="stylesheet" href="tuning.css">
+    <link rel="stylesheet" href="../splash.css">
+</head>
+
+<body>
+    <div id="fui-splash" class="fui-splash" role="button" aria-label="スプラッシュを閉じる" tabindex="0">
+        <div class="fui-scanline"></div>
+        <div class="fui-grid"></div>
+        <div class="fui-vignette"></div>
+        <div class="fui-frame">
+            <span class="fui-corner fui-corner-tl"></span>
+            <span class="fui-corner fui-corner-tr"></span>
+            <span class="fui-corner fui-corner-bl"></span>
+            <span class="fui-corner fui-corner-br"></span>
+        </div>
+        <div class="fui-center">
+            <div class="fui-phase active" id="fui-phase-welcome">
+                <div class="fui-welcome fui-font-en">Welcome to</div>
+            </div>
+            <div class="fui-phase" id="fui-phase-typewriter">
+                <div class="fui-typewriter-wrap fui-font-en">
+                    <span id="fui-typed-text"></span>
+                    <span class="fui-cursor" id="fui-cursor"></span>
+                </div>
+            </div>
+            <div class="fui-phase" id="fui-phase-acronym">
+                <div class="fui-acronym-phase" id="fui-acronym-box">
+                    <div class="fui-acronym-lower fui-font-en">kumamoto simin music</div>
+                    <div class="fui-acronym-upper fui-font-en">KUMAMOTO SIMIN MUSIC</div>
+                </div>
+            </div>
+            <div class="fui-loading-indicator fui-font-en" id="fui-loading">Now Loading...</div>
+            <div class="fui-phase" id="fui-phase-final">
+                <div class="fui-sub fui-sub-jp">熊本市民吹奏楽団</div>
+                <div class="fui-line"></div>
+                <div class="fui-acronym fui-font-en">KUMAMOTO SISUI</div>
+                <div class="fui-line"></div>
+                <div class="fui-desc fui-font-en">Kumamoto City Wind Orchestra</div>
+                <div class="fui-desc fui-font-en">This system made by HoloMoto</div>
+                <div class="fui-tap fui-font-en">TAP TO START</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-background"></div>
+    <div class="glass-container">
+        <div class="mt-frame" aria-hidden="true">
+            <span class="mt-corner mt-corner-tl"></span>
+            <span class="mt-corner mt-corner-tr"></span>
+            <span class="mt-corner mt-corner-bl"></span>
+            <span class="mt-corner mt-corner-br"></span>
+        </div>
+        <header>
+            <h1 class="mt-fui-en">Tuner</h1>
+        </header>
+
+        <main>
+            <div class="visualizer mt-visualizer-frame tune-visualizer">
+                <div class="tune-note-block">
+                    <div class="tune-note-name dim" id="tune-note">—</div>
+                    <div class="tune-hz" id="tune-hz">— Hz</div>
+                    <div class="tune-meter-wrap">
+                        <div class="tune-meter-labels">
+                            <span>♭</span>
+                            <span class="mt-fui-en">cents</span>
+                            <span>♯</span>
+                        </div>
+                        <div class="tune-meter" aria-hidden="true">
+                            <div class="tune-meter-center"></div>
+                            <div class="tune-meter-needle" id="tune-needle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-section tune-controls">
+                <div class="control-row">
+                    <label class="mt-fui-en" for="tune-ref-hz">Ref A4</label>
+                    <select id="tune-ref-hz">
+                        <option value="440" selected>440 Hz</option>
+                        <option value="442">442 Hz</option>
+                        <option value="443">443 Hz</option>
+                    </select>
+                </div>
+                <p class="tune-hint">マイクに向けて音を出してください。中央に針が近づくほど合っています。</p>
+            </div>
+
+            <div class="action-area">
+                <button type="button" id="tune-mic-btn" class="play-btn" aria-label="マイクを開始" aria-pressed="false">
+                    <div class="icon-play"></div>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="../splash.js"></script>
+    <script src="tuning.js"></script>
+</body>
+
+</html>
