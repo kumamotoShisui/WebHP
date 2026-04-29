@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026年度 定期演奏会 特設ページ | 熊本市民吹奏楽団</title>
+    <meta name="description" content="熊本市民吹奏楽団 2026年度 定期演奏会の特設ページです。開催情報やポスター、チケット情報をご案内します。">
+    <link rel="icon" href="images/logo.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        .special-hero {
+            min-height: 100vh;
+            padding: 130px 0 80px;
+            background-image: linear-gradient(rgba(15, 23, 42, 0.52), rgba(15, 23, 42, 0.58)), var(--hero-bg-image, url('images/S__218726496.jpg'));
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: var(--white);
+        }
+
+        .special-card {
+            background: rgba(255, 255, 255, 0.96);
+            color: var(--text-color);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: var(--shadow-lg);
+            margin-top: 26px;
+            position: relative;
+        }
+
+        .section-torisan-mini {
+            position: absolute;
+            top: -18px;
+            right: -12px;
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.24));
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .special-title {
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            line-height: 1.2;
+            margin-bottom: 12px;
+            font-family: var(--font-serif);
+        }
+
+        .special-subtitle {
+            font-size: 1.05rem;
+            opacity: 0.95;
+        }
+
+        .special-page-header {
+            text-align: center;
+        }
+
+        .special-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .special-info-item {
+            background: #f8fafc;
+            border-left: 4px solid var(--secondary-color);
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.98rem;
+        }
+
+        .special-posters {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-top: 24px;
+        }
+
+        .special-posters img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .special-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 26px;
+        }
+
+        .special-note {
+            margin-top: 14px;
+            font-size: 0.92rem;
+            color: var(--text-light);
+        }
+
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .program-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .program-block.part-1 {
+            background: #fff7ed;
+            border-color: #fdba74;
+        }
+
+        .program-block.part-2 {
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+
+        .program-block.encore {
+            background: #f5f3ff;
+            border-color: #c4b5fd;
+        }
+
+        .program-block h3 {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .program-list {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+            font-size: 0.94rem;
+            line-height: 1.5;
+        }
+
+        .program-list li {
+            padding-left: 1.1em;
+            position: relative;
+        }
+
+        .program-list li::before {
+            content: '♪';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        .photo-scroll-wrap {
+            margin-top: 18px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #94a3b8 #e2e8f0;
+        }
+
+        .photo-scroll-track {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(250px, 27vw);
+            gap: 14px;
+        }
+
+        .photo-card {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            background: #f8fafc;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .photo-card-button {
+            cursor: zoom-in;
+            padding: 0;
+            width: 100%;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-card.is-placeholder {
+            border: 2px dashed #cbd5e1;
+            background: repeating-linear-gradient(-45deg, #f8fafc, #f8fafc 10px, #f1f5f9 10px, #f1f5f9 20px);
+        }
+
+        .photo-placeholder-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #64748b;
+            font-weight: 700;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .photo-placeholder-label i {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: #94a3b8;
+        }
+
+        .photo-caption {
+            position: absolute;
+            right: 8px;
+            bottom: 8px;
+            font-size: 0.75rem;
+            color: #fff;
+            background: rgba(15, 23, 42, 0.72);
+            border-radius: 999px;
+            padding: 4px 8px;
+            line-height: 1;
+        }
+
+        .photo-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 2200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .photo-lightbox.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .photo-lightbox img {
+            max-width: min(1200px, 94vw);
+            max-height: 88vh;
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+            object-fit: contain;
+            background: #0f172a;
+        }
+
+        .photo-lightbox-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.72);
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .special-hero {
+                padding-top: 110px;
+            }
+
+            .special-card {
+                padding: 20px;
+            }
+
+            .section-torisan-mini {
+                width: 54px;
+                height: 54px;
+                top: -14px;
+                right: -8px;
+            }
+
+            .special-info-grid,
+            .special-posters,
+            .program-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .photo-scroll-track {
+                grid-auto-columns: minmax(210px, 72vw);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.jpg" alt="熊本市民吹奏楽団ロゴ" class="logo-icon">
+                <div class="logo-text">
+                    <span class="logo-jp">熊本市民吹奏楽団</span>
+                    <span class="logo-en">Kumamoto simin music</span>
+                </div>
+            </a>
+            <a href="index.html" class="btn-nav">ホームへ戻る</a>
+        </div>
+    </header>
+
+    <main class="special-hero" id="special-hero">
+        <div class="container">
+            <div class="special-page-header">
+                <p class="section-subtitle" style="color: #fde68a;">Special Page</p>
+                <h1 class="special-title">2026年度 定期演奏会</h1>
+                <p class="special-subtitle">第41回「昭和の日」恒例のステージ。団員一同ホールの皆さんと一体になって演奏いたしました。</p>
+            </div>
+
+            <section class="special-card" aria-labelledby="photo-placeholder-title">
+                <img src="image/Torisan.png" alt="" class="section-torisan-mini" aria-hidden="true">
+                <h2 id="photo-placeholder-title" class="section-title" style="font-size: 1.5rem;">当日の様子</h2>
+                <div class="section-line" style="margin: 12px 0 18px;"></div>
+                <div class="photo-scroll-wrap" aria-label="当日の様子フォトギャラリー">
+                    <div class="photo-scroll-track" id="photo-scroll-track"></div>
+                </div>
+            </section>
+
+            <section class="special-card" aria-labelledby="program-listing">
+                <img src="image/Torisan.png" alt="" class="section-torisan-mini" aria-hidden="true">
+                <h2 id="program-listing" class="section-title" style="font-size: 1.5rem;">演奏曲目</h2>
+                <div class="section-line" style="margin: 12px 0 18px;"></div>
+                <div class="program-grid">
+                    <article class="program-block part-1">
+                        <h3>第一部</h3>
+                        <ul class="program-list">
+                            <li>Rise of the Son</li>
+                            <li>2026年度吹奏楽コンクール課題曲より1</li>
+                            <li>2026年度吹奏楽コンクール課題曲より3</li>
+                            <li>ラ・フォルム・ドゥ・シャク・アムール・ションジュ・コム・ル・カレイドスコープ</li>
+                            <li>マードックからの最期の手紙（2021年版）</li>
+                        </ul>
+                    </article>
+
+                    <article class="program-block part-2">
+                        <h3>第二部</h3>
+                        <ul class="program-list">
+                            <li>スターパズルマーチ</li>
+                            <li>交響曲「シネマ・トリロジー」〜スタジオジブリ・コレクション＝第一楽章「Sky-Flight」〜</li>
+                            <li>Summer</li>
+                            <li>楽器紹介「森の音楽隊」</li>
+                            <li>アンパンマン・メドレー</li>
+                            <li>J-BEST ~ミセスメドレー</li>
+                            <li>Paradise Has No Border</li>
+                        </ul>
+                    </article>
+
+                    <article class="program-block encore">
+                        <h3>アンコール</h3>
+                        <ul class="program-list">
+                            <li>スーパーマリオブラザーズ</li>
+                            <li>倍倍FIGHT!</li>
+                            <li>サンダークレスト</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section class="special-card" aria-labelledby="concert-overview">
+                <img src="image/Torisan.png" alt="" class="section-torisan-mini" aria-hidden="true">
+                <h2 id="concert-overview" class="section-title" style="font-size: 1.5rem;">開催概要</h2>
+                <div class="section-line" style="margin: 12px 0 18px;"></div>
+
+                <div class="special-info-grid">
+                    <div class="special-info-item"><i class="fas fa-calendar-alt"></i> <strong>日時：</strong>2026年4月29日（水・祝）</div>
+                    <div class="special-info-item"><i class="fas fa-map-marker-alt"></i> <strong>会場：</strong>熊本県立劇場</div>
+                    <div class="special-info-item"><i class="fas fa-user-tie"></i> <strong>指揮：</strong><br>常任指揮者 北村直也<br>客員指揮者 山田 善裕</div>
+                </div>
+
+                <div class="special-posters">
+                    <figure>
+                        <img src="images/S__218726496.jpg" alt="2026年度 定期演奏会のポスター">
+                    </figure>
+                    <figure>
+                        <img src="images/655625488_18059022515702184_5010038742014744730_n.jpg"
+                            alt="定期演奏会チケット販売の案内ポスター">
+                    </figure>
+                </div>
+
+                <div class="special-actions">
+                    <a href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener noreferrer"
+                        class="btn btn-secondary">
+                        <i class="fas fa-calendar-plus" style="margin-right: 8px;"></i>Googleカレンダーに追加
+                    </a>
+                    <a href="index.html#contact" class="btn btn-primary">
+                        <i class="fas fa-envelope" style="margin-right: 8px;"></i>お問い合わせ
+                    </a>
+                </div>
+                <p class="special-note">チケット取り扱い先の詳細は、案内ポスターをご確認ください。</p>
+            </section>
+
+        </div>
+    </main>
+    <div class="photo-lightbox" id="photo-lightbox" aria-hidden="true">
+        <button type="button" class="photo-lightbox-close" id="photo-lightbox-close" aria-label="拡大画像を閉じる">×</button>
+        <img id="photo-lightbox-image" alt="拡大画像">
+    </div>
+    <script>
+        (function () {
+            var hero = document.getElementById('special-hero');
+            // ここに images/Teien/BG 配下の画像ファイルを追加してください
+            var HERO_BG_IMAGES = [
+                'images/Teien/BG/10686.jpg',
+                'images/Teien/BG/157287.jpg'
+            ];
+
+            if (hero && HERO_BG_IMAGES.length > 0) {
+                var chosen = HERO_BG_IMAGES[Math.floor(Math.random() * HERO_BG_IMAGES.length)];
+                hero.style.setProperty('--hero-bg-image', "url('" + chosen + "')");
+            }
+        })();
+    </script>
+    <script>
+        (function () {
+            var track = document.getElementById('photo-scroll-track');
+            if (!track) return;
+            var lightbox = document.getElementById('photo-lightbox');
+            var lightboxImage = document.getElementById('photo-lightbox-image');
+            var lightboxClose = document.getElementById('photo-lightbox-close');
+
+            var photos = [
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_10.jpg', alt: '定期演奏会当日の様子 写真1' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_14.jpg', alt: '定期演奏会当日の様子 写真2' },
+                { src: 'images/Teien/BG/LINE_ALBUM_20260429定演_260429_1.jpg', alt: '定期演奏会当日の様子 写真3' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_9.jpg', alt: '定期演奏会当日の様子 写真4' },
+                { src: 'images/Teien/BG/157287.jpg', alt: '定期演奏会当日の様子 写真5' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_13.jpg', alt: '定期演奏会当日の様子 写真6' },
+                { src: 'images/Teien/BG/10686.jpg', alt: '定期演奏会当日の様子 写真7' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_12.jpg', alt: '定期演奏会当日の様子 写真8' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_15.jpg', alt: '定期演奏会当日の様子 写真9' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_2.jpg', alt: '定期演奏会当日の様子 写真10' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_7.jpg', alt: '定期演奏会当日の様子 写真11' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_16.jpg', alt: '定期演奏会当日の様子 写真12' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_4.jpg', alt: '定期演奏会当日の様子 写真13' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_6.jpg', alt: '定期演奏会当日の様子 写真14' },
+                { src: 'images/Teien/BG/LINE_ALBUM_20260429定演_260429_11.jpg', alt: '定期演奏会当日の様子 写真15' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_5.jpg', alt: '定期演奏会当日の様子 写真16' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_17.jpg', alt: '定期演奏会当日の様子 写真17' },
+                { src: 'images/Teien/BG/LINE_ALBUM_20260429定演_260429_3.jpg', alt: '定期演奏会当日の様子 写真18' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_18.jpg', alt: '定期演奏会当日の様子 写真19' },
+                { src: 'images/Teien/LINE_ALBUM_20260429定演_260429_8.jpg', alt: '定期演奏会当日の様子 写真20' }
+            ];
+
+            for (var j = photos.length - 1; j > 0; j--) {
+                var k = Math.floor(Math.random() * (j + 1));
+                var t = photos[j];
+                photos[j] = photos[k];
+                photos[k] = t;
+            }
+
+            function openLightbox(src, alt) {
+                if (!lightbox || !lightboxImage) return;
+                lightboxImage.src = src;
+                lightboxImage.alt = alt || '拡大画像';
+                lightbox.classList.add('is-open');
+                lightbox.setAttribute('aria-hidden', 'false');
+            }
+
+            function closeLightbox() {
+                if (!lightbox || !lightboxImage) return;
+                lightbox.classList.remove('is-open');
+                lightbox.setAttribute('aria-hidden', 'true');
+                lightboxImage.src = '';
+            }
+
+            if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+            if (lightbox) {
+                lightbox.addEventListener('click', function (e) {
+                    if (e.target === lightbox) closeLightbox();
+                });
+            }
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeLightbox();
+            });
+
+            photos.forEach(function (photo, idx) {
+                var card = document.createElement('button');
+                card.type = 'button';
+                card.className = 'photo-card photo-card-button';
+                card.setAttribute('aria-label', '写真を拡大表示');
+
+                var img = document.createElement('img');
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                img.alt = photo.alt;
+                img.src = photo.src;
+
+                var cap = document.createElement('span');
+                cap.className = 'photo-caption';
+                cap.textContent = '#' + (idx + 1);
+
+                img.addEventListener('error', function () {
+                    // 画像読込に失敗した場合はカードごと除外
+                    if (card.parentNode) card.parentNode.removeChild(card);
+                });
+
+                card.addEventListener('click', function () {
+                    openLightbox(photo.src, photo.alt);
+                });
+
+                card.appendChild(img);
+                card.appendChild(cap);
+                track.appendChild(card);
+            });
+        })();
+    </script>
+</body>
+
+</html>
