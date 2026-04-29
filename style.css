@@ -1113,6 +1113,19 @@ img {
     gap: 5px;
 }
 
+/* Instagram embed centering */
+.instagram-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.instagram-container .instagram-media,
+.instagram-container iframe.instagram-media-rendered {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
 @media (max-width: 576px) {
     .instagram-link-card {
         flex-direction: column;
