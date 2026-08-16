@@ -1218,6 +1218,51 @@ a.mascot {
     letter-spacing: 0.03em;
 }
 
+/* Record prizes */
+.prize-gold {
+    display: inline-block;
+    color: #854d0e;
+    background: linear-gradient(180deg, #fde047 0%, #facc15 55%, #eab308 100%);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 2px 12px;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(161, 98, 7, 0.28);
+}
+
+.prize-silver {
+    display: inline-block;
+    color: #334155;
+    background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 50%, #94a3b8 100%);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 2px 12px;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(100, 116, 139, 0.28);
+}
+
+.record-repertoire {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.record-repertoire h4 {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.record-repertoire ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    line-height: 1.9;
+    font-size: 1.02rem;
+    color: var(--text-color);
+}
+
 @keyframes float {
     0%, 100% {
         transform: translateY(0px);
