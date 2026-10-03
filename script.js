@@ -88,11 +88,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // We'll trust the CSS I wrote initially runs on load, but for elements below fold, 
     // it's better to pause them.
     // For now, let's just observe them.
-    function setupRecaptchaContactForm(form) {
+    const EMAILJS_PUBLIC_KEY = 'Y3xh3lFSEN_vJDdHu';
+    const EMAILJS_SERVICE_ID = 'service_kljgbvx';
+    const EMAILJS_TEMPLATE_JOIN = 'template_ogrkslu';
+    const EMAILJS_TEMPLATE_OTHER = 'template_jzxrbpk';
+
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    }
+
+    function setupRecaptchaContactForm(form, templateId) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-            if (typeof grecaptcha === 'undefined') {
-                alert('reCAPTCHAの読み込みに失敗しました。ページを再読み込みしてください。');
+            if (typeof grecaptcha === 'undefined' || typeof emailjs === 'undefined') {
+                alert('フォームの読み込みに失敗しました。ページを再読み込みしてください。');
                 return;
             }
             const recaptchaResponse = grecaptcha.getResponse();
@@ -100,19 +109,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('ロボットではありません（reCAPTCHA）にチェックを入れてください。');
                 return;
             }
-            alert('お問い合わせありがとうございます。\n（これはデモです。実際には送信されていません。）');
-            form.reset();
-            grecaptcha.reset();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalLabel = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = '送信中…';
+
+            emailjs.sendForm(EMAILJS_SERVICE_ID, templateId, form)
+                .then(function () {
+                    alert('お問い合わせありがとうございます。送信が完了しました。');
+                    form.reset();
+                })
+                .catch(function (err) {
+                    console.error('EmailJS error:', err);
+                    alert('送信に失敗しました。時間をおいて再度お試しいただくか、shisuitori3@gmail.com までメールでご連絡ください。');
+                })
+                .finally(function () {
+                    grecaptcha.reset();
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalLabel;
+                });
         });
     }
 
     const contactJoinForm = document.getElementById('contactJoinForm');
     if (contactJoinForm) {
-        setupRecaptchaContactForm(contactJoinForm);
+        setupRecaptchaContactForm(contactJoinForm, EMAILJS_TEMPLATE_JOIN);
     }
     const contactOtherForm = document.getElementById('contactOtherForm');
     if (contactOtherForm) {
-        setupRecaptchaContactForm(contactOtherForm);
+        setupRecaptchaContactForm(contactOtherForm, EMAILJS_TEMPLATE_OTHER);
     }
 
     // 楽団紹介：練習風景カルーセル（PC の2カラム内で CSS の % 幅が効かず縦積みになる対策）

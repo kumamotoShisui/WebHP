@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 
 <body>
@@ -73,25 +74,30 @@
                     <input type="text" id="joinName" name="name" required placeholder="例：熊本 太郎" autocomplete="name">
                 </div>
                 <div class="form-group">
+                    <label for="joinEmail">メールアドレス <span style="color: red;">*</span></label>
+                    <input type="email" id="joinEmail" name="email" required placeholder="例：kumamoto@example.com"
+                        autocomplete="email">
+                </div>
+                <div class="form-group">
                     <label for="joinInstrument">希望楽器 <span style="color: red;">*</span></label>
                     <select id="joinInstrument" name="instrument" required>
                         <option value="">選択してください</option>
-                        <option value="piccolo">ピッコロ</option>
-                        <option value="flute">フルート</option>
-                        <option value="oboe">オーボエ</option>
-                        <option value="clarinet">クラリネット</option>
-                        <option value="bass_clarinet">バスクラリネット</option>
-                        <option value="bassoon">ファゴット</option>
-                        <option value="alto_sax">アルトサックス</option>
-                        <option value="tenor_sax">テナーサックス</option>
-                        <option value="baritone_sax">バリトンサックス</option>
-                        <option value="trumpet">トランペット</option>
-                        <option value="horn">ホルン</option>
-                        <option value="trombone">トロンボーン</option>
-                        <option value="euphonium">ユーフォニアム</option>
-                        <option value="tuba">チューバ</option>
-                        <option value="percussion">パーカッション</option>
-                        <option value="other">その他</option>
+                        <option value="ピッコロ">ピッコロ</option>
+                        <option value="フルート">フルート</option>
+                        <option value="オーボエ">オーボエ</option>
+                        <option value="クラリネット">クラリネット</option>
+                        <option value="バスクラリネット">バスクラリネット</option>
+                        <option value="ファゴット">ファゴット</option>
+                        <option value="アルトサックス">アルトサックス</option>
+                        <option value="テナーサックス">テナーサックス</option>
+                        <option value="バリトンサックス">バリトンサックス</option>
+                        <option value="トランペット">トランペット</option>
+                        <option value="ホルン">ホルン</option>
+                        <option value="トロンボーン">トロンボーン</option>
+                        <option value="ユーフォニアム">ユーフォニアム</option>
+                        <option value="チューバ">チューバ</option>
+                        <option value="パーカッション">パーカッション</option>
+                        <option value="その他">その他</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -105,7 +111,7 @@
                         placeholder="ご質問や見学希望などをご記入ください"></textarea>
                 </div>
                 <div class="form-group">
-                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                    <div class="g-recaptcha" data-sitekey="6LcDvtwtAAAAAIC08bHRJntIuJ2k4oZql6KyUSDq"></div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg w-full">送信する</button>
             </form>
